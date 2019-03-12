@@ -1,4 +1,5 @@
 import csv
+import time
 
 
 QUESTION_FIELDS = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
@@ -21,6 +22,7 @@ def export_data(data_base, file):
         writer = csv.DictWriter(f, fields)
         writer.writeheader()
         for key, val in sorted(data_base.items()):
+            val['submission_time'] = int(time.mktime(val['submission_time']))
             row = {'id': key}
             row.update(val)
             writer.writerow(row)
@@ -52,6 +54,9 @@ def import_data(file):
             if field == 'id':
                 dictionary[row[0]] = {}
             else:
-                dictionary[row[0]][field] = row[i]
+                if field == 'submission_time':
+                    dictionary[row[0]][field] = time.localtime(int(row[i]))
+                else:
+                    dictionary[row[0]][field] = row[i]
 
     return dictionary

@@ -20,12 +20,17 @@
         <tr>
             <td>{{ id }}</td>
             {% for key, value in question.items() %}
-            {% if key == 'title' %}
-            <td><a href="/story/{{ id }}">{{ value }}</td>
-            </td>
-            {% else %}
-            <td>{{ value }}</td>
-            {% endif %}
+                {% if key == 'title' %}
+                    <td><a href="/story/{{ id }}">{{ value }}</td>
+                {% else %}
+                    {% if key == 'submission_time' %}
+                        <td>
+                            {{ value[0] }}.{{ value[1] }}.{{ value[2] }} {{ value[3] }}:{{ value[4] }}:{{ value[5] }}
+                        </td>
+                    {% else %}
+                        <td>{{ value }}</td>
+                    {% endif %}
+                {% endif %}
             {% endfor %}
         </tr>
         {% endfor %}
