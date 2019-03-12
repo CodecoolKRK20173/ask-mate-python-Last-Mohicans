@@ -19,6 +19,8 @@ def route_list():
 @app.route('/question/<question_id>/vote-down')
 def route_question():
     pass
+# @app.route('/question/<question_id>/<option>') # zamiast 5 innych
+# options = ['edit', 'delete', 'new-answer', 'vote-up', 'vote-down']
 
 
 @app.route('/add-question')
