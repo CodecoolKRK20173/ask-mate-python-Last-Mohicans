@@ -1,0 +1,57 @@
+import csv
+
+
+QUESTION_FIELDS = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
+ANSWER_FIELDS = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
+
+QUESTION_FILE = './sample_data/question.csv'
+ANSWER_FILE = './sample_data/answer.csv'
+
+
+def export_data(data_base, file):
+    if file == QUESTION_FILE:
+        fields = QUESTION_FIELDS
+    elif file == ANSWER_FILE:
+        fields = ANSWER_FIELDS
+    else:
+        return False
+
+    with open(file, "w") as f:
+
+        writer = csv.DictWriter(f, fields)
+        writer.writeheader()
+        for key, val in sorted(data_base.items()):
+            row = {'id': key}
+            row.update(val)
+            writer.writerow(row)
+    return True
+
+
+def import_data(file):
+    dictionary = {}
+    rows = []
+    index = 0
+
+    if file == QUESTION_FILE:
+        fields = QUESTION_FIELDS
+    elif file == ANSWER_FILE:
+        fields = ANSWER_FIELDS
+    else:
+        return dictionary
+
+    with open(file, "r") as f:
+        reader = csv.reader(f)
+
+        for line in reader:
+            if index > 0:
+                rows.append(line)
+            index += 1
+
+    for row in rows:
+        for i, field in enumerate(fields):
+            if field == 'id':
+                dictionary[row[0]] = {}
+            else:
+                dictionary[row[0]][field] = row[i]
+
+    return dictionary
