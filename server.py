@@ -23,8 +23,8 @@ def list():
 # @app.route('/question/<question_id>/vote-up')
 # @app.route('/question/<question_id>/vote-down')
 def route_question(question_id=None):
-    questions = data_manager.get_questions()
     if question_id:
+        questions = data_manager.update_question_view_number(question_id)
         answers = data_manager.get_answers_by_question_id(question_id)
         return render_template('question.html', question=questions[question_id], answers=answers)
     return redirect('/list')
