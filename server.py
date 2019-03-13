@@ -26,7 +26,7 @@ def route_question(question_id=None):
     if question_id:
         questions = data_manager.update_question_view_number(question_id)
         answers = data_manager.get_answers_by_question_id(question_id)
-        return render_template('question.html', question=questions[question_id], answers=answers)
+        return render_template('question.html', question=questions[question_id], answers=answers, question_id=question_id)
     return redirect('/list')
 
 # @app.route('/question/<question_id>/<option>') # zamiast 5 innych
@@ -56,6 +56,18 @@ def route_add_question():
     else:
         question_headers = data_manager.get_question_fields()[4:6]
         return render_template('add-question.html', question_headers=question_headers)
+
+
+@app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
+def route_add_answer(question_id):
+        # question_id = question_id
+        if request.method == 'GET':
+            questions = data_manager.update_question_view_number(question_id)
+            answers = data_manager.get_answers_by_question_id(question_id)
+            return render_template('answer.html', question=questions[question_id], answers=answers, question_id=question_id)
+
+        elif request.method == 'POST':
+            return redirect('/question/'+question_id)
 
 
 if __name__ == "__main__":

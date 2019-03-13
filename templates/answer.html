@@ -2,9 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Add an answer</title>
 </head>
 <body>
+    <h2>Your answer to the question</h2>
+    <table border="2">
+        <tr>
+
+            <th>title</th>
+            <th>message</th>
+
+        </tr>
+        <tr>
+            <td>{{ question["title"]}}</td>
+            <td>{{ question["message"]}}</td>
+        </tr>
+    </table>
+    <br>
+        <tr><a href="/question/{{question_id}}">Back to question </a></tr>
+    <br>
+        <tr><a href="/list">Back to list of questions </a></tr>
+    <br>
+
+
+    <form action="/question/{{question_id}}/new-answer" method="post">
+        <label for="message"><br>Answer:<br></label>
+        <textarea id="message" name="message" rows="8" cols="80" required></textarea>
+
+        <tr>
+          <button type="submit">Add answer</button>
+        </tr>
+
+    </form>
+
+    <!--</table>-->
 
 </body>
 </html>

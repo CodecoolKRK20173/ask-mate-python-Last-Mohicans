@@ -27,8 +27,11 @@
         </tr>
     </table>
     <br>
+        <tr><a href="/list">Back to list </a></tr>
+    <br>
     <h2>Answers:</h2>
     <br>
+
     <table border="2">
         <tr>
             <th>id</th>
@@ -55,5 +58,9 @@
         {% endfor %}
         {% endif %}
     </table>
+
+        <tr><a href="/question/{{question_id}}/new-answer">Add an answer </a></tr>
+            <!--<button type="button" form="my_form">ok</button>-->
+
 </body>
 </html>

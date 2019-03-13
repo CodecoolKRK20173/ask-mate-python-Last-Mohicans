@@ -8,7 +8,7 @@
     <form action="/add-question" method="post">
         {% for header in question_headers %}
         <label for= "{{header}}" ><br>{{header}}:<br></label>
-        <textarea id="{{header}}" name="{{header}}" rows="5" cols="60" required>  </textarea>
+        <textarea id="{{header}}" name="{{header}}" rows="5" cols="60" required></textarea>
         {% endfor %}
        <br><button type="submit">Add User Question</button>
     </form>
