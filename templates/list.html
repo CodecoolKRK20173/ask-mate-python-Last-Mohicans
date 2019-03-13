@@ -44,6 +44,11 @@
                     <button type="submit">Vote Down</button>
                 </form>
             </td>
+            <td>
+                <form action="/question/{{ id }}/delete" method="post">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
         {% endif %}
