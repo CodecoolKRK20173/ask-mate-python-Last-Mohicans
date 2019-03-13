@@ -40,6 +40,8 @@
             <th>question_id</th>
             <th>message</th>
             <th>image</th>
+            <th></th>
+            <th></th>
         </tr>
         {% if answers %}
         {% for id, answer in answers.items() %}
@@ -54,6 +56,16 @@
                     <td>{{ value }}</td>
                 {% endif %}
             {% endfor %}
+            <td>
+                <form action="/answer/{{ id }}/vote-up" method="post">
+                    <button type="submit">Vote UP</button>
+                </form>
+            </td>
+            <td>
+                <form action="/answer/{{ id }}/vote-down" method="post">
+                    <button type="submit">Vote Down</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
         {% endif %}

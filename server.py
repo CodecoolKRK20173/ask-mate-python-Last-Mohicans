@@ -11,7 +11,7 @@ def index():
 
 
 @app.route('/list')
-def list():
+def questions_list():
     questions = data_manager.get_questions()
     return render_template('list.html', questions=questions)
 
@@ -20,11 +20,10 @@ def list():
 # @app.route('/question/<question_id>/edit')
 # @app.route('/question/<question_id>/delete')
 # @app.route('/question/<question_id>/new-answer')
-# @app.route('/question/<question_id>/vote-up')
-# @app.route('/question/<question_id>/vote-down')
 def route_question(question_id=None):
     if question_id:
-        questions = data_manager.update_question_view_number(question_id)
+        data_manager.update_question_view_number(question_id)
+        questions = data_manager.get_questions()
         answers = data_manager.get_answers_by_question_id(question_id)
         return render_template('question.html', question=questions[question_id], answers=answers, question_id=question_id)
     return redirect('/list')
@@ -33,23 +32,42 @@ def route_question(question_id=None):
 # options = ['edit', 'delete', 'new-answer', 'vote-up', 'vote-down']
 
 
+@app.route('/question/<question_id>/vote-up', methods=['POST'])
+def question_vote_up(question_id=None):
+    data_manager.update_question_vote_number(question_id, 1)
+    return redirect('/list')
+
+
+@app.route('/question/<question_id>/vote-down', methods=['POST'])
+def question_vvote_down(question_id=None):
+    data_manager.update_question_vote_number(question_id, -1)
+    return redirect('/list')
+
+
+@app.route('/answer/<answer_id>/vote-up', methods=['POST'])
+def answer_vote_up(answer_id=None):
+    question_id = data_manager.update_answer_vote_number(answer_id, 1)
+    return redirect(f'/question/{question_id}')
+
+
+@app.route('/answer/<answer_id>/vote-down', methods=['POST'])
+def answer_vote_down(answer_id=None):
+    question_id = data_manager.update_answer_vote_number(answer_id, -1)
+    return redirect(f'/question/{question_id}')
+
+
 @app.route('/add-question', methods=['GET', 'POST'])
 def route_add_question():
     if request.method == 'POST':
-        values = []
-        question_headers = data_manager.get_question_fields()[1:]
+        values = [data_manager.get_new_question_id(),
+                  util.get_timestamp(),
+                  '0',
+                  '0',
+                  request.form['title'],
+                  request.form['message'],
+                  '']
 
-        id = data_manager.get_new_question_id()  # ID
-        values.append(util.get_timestamp())  # SUBMISSION_TIME
-        values.append('0')  # VIEW_NUMBER
-        values.append('0')  # VOTE_NUMBER
-        values.append(request.form['title'])  # TITLE
-        values.append(request.form['message'])  # MESSAGE
-        values.append('')  # IMAGE
-
-        added_question = dict(zip(question_headers, values))
-        print(added_question)
-        data_manager.add_question(id, added_question)
+        data_manager.add_question(values)
 
         return redirect('/')
 
