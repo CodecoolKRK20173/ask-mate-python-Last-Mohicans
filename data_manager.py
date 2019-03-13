@@ -41,10 +41,9 @@ def update_answer_vote_number(id, value):
     return answer['question_id']
 
 
-def add_question(id, question):
-    questions = connection.import_data(connection.QUESTIONS_FILE)
-    questions[id] = question
-    connection.export_data(questions, connection.QUESTIONS_FILE)
+def add_question(values):
+    added_question = dict(zip(connection.QUESTION_FIELDS, values))
+    connection.append_data(added_question, connection.QUESTIONS_FILE)
 
 
 def export_questions(data):

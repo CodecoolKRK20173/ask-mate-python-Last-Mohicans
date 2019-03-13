@@ -61,3 +61,17 @@ def import_data(file):
                         dictionary[row[0]][field] = row[i]
 
     return dictionary
+
+
+def append_data(data, file):
+    if file == QUESTIONS_FILE:
+        fields = QUESTION_FIELDS
+    elif file == ANSWERS_FILE:
+        fields = ANSWER_FIELDS
+    else:
+        return False
+
+    with open(file, 'a') as f:
+        writer = csv.DictWriter(f, fields)
+        writer.writerow(data)
+    return True

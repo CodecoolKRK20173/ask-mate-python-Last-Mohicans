@@ -59,20 +59,15 @@ def answer_vote_down(answer_id=None):
 @app.route('/add-question', methods=['GET', 'POST'])
 def route_add_question():
     if request.method == 'POST':
-        values = []
-        question_headers = data_manager.get_question_fields()[1:]
+        values = [data_manager.get_new_question_id(),
+                  util.get_timestamp(),
+                  '0',
+                  '0',
+                  request.form['title'],
+                  request.form['message'],
+                  '']
 
-        id = data_manager.get_new_question_id()  # ID
-        values.append(util.get_timestamp())  # SUBMISSION_TIME
-        values.append('0')  # VIEW_NUMBER
-        values.append('0')  # VOTE_NUMBER
-        values.append(request.form['title'])  # TITLE
-        values.append(request.form['message'])  # MESSAGE
-        values.append('')  # IMAGE
-
-        added_question = dict(zip(question_headers, values))
-        print(added_question)
-        data_manager.add_question(id, added_question)
+        data_manager.add_question(values)
 
         return redirect('/')
 
