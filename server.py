@@ -80,11 +80,21 @@ def route_add_question():
 def route_add_answer(question_id):
         # question_id = question_id
         if request.method == 'GET':
-            questions = data_manager.update_question_view_number(question_id)
+            questions = data_manager.get_questions()
             answers = data_manager.get_answers_by_question_id(question_id)
             return render_template('answer.html', question=questions[question_id], answers=answers, question_id=question_id)
 
         elif request.method == 'POST':
+
+            values = [data_manager.get_new_answer_id(),
+                      util.get_timestamp(),
+                      '0',
+                      question_id,
+                      request.form['message'],
+                      '']
+
+            data_manager.add_answer(values)
+
             return redirect('/question/'+question_id)
 
 

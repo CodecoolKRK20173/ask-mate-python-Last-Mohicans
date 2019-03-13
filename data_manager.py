@@ -46,6 +46,11 @@ def add_question(values):
     connection.append_data(added_question, connection.QUESTIONS_FILE)
 
 
+def add_answer(values):
+    added_answer = dict(zip(connection.ANSWER_FIELDS, values))
+    connection.append_data(added_answer, connection.ANSWERS_FILE)
+
+
 def export_questions(data):
     connection.export_data(data, connection.QUESTIONS_FILE)
 

@@ -1,6 +1,6 @@
 id,submission_time,view_number,vote_number,title,message,image
-0,1493368154,89,7,How to make lists in Python?,"I am totally new to this, any hints?",
-1,1493068124,33,9,Wordpress loading multiple jQuery Versions,"I developed a plugin that uses the jquery booklet plugin (http://builtbywill.com/booklet/#/) this plugin binds a function to $ so I cann call $('.myBook').booklet();
+0,1493368154,94,7,How to make lists in Python?,"I am totally new to this, any hints?",
+1,1493068124,34,9,Wordpress loading multiple jQuery Versions,"I developed a plugin that uses the jquery booklet plugin (http://builtbywill.com/booklet/#/) this plugin binds a function to $ so I cann call $('.myBook').booklet();
 
 I could easy managing the loading order with wp_enqueue_script so first I load jquery then I load booklet so everything is fine.
 
@@ -9,6 +9,8 @@ BUT in my theme i also using jquery via webpack so the loading order is now foll
 jquery
 booklet
 app.js (bundled file with webpack, including jquery)",images/image1.png
-2,1552468925,14,0,jeszcze raz to samo pytanie dla sprawdzenia,"no wlasnie co tu zrobic, a wazniejsze jeszcze jak pokazac odpowiedz do pytania, czy jakos pod spodem (pod pytaniem) czy mo¿e jakoœ obok? no i co technicznie zastosowac?",
+2,1552480431,5,2,"walnij sobie m³otkiem w g³owê, to rozwi¹¿e ka¿dy problem",,
 3,1552470158,4,0,no to jeszcze raz to samo pytanie,"no wlasnie co tu zrobic, a wazniejsze jeszcze jak pokazac odpowiedz do pytania, czy jakos pod spodem (pod pytaniem) czy mo¿e jakoœ obok? no i co technicznie zastosowac?",
 4,1552472828,0,0,asfasf,asfaf,
+5,1552480007,0,0,aasfafa,asfasfaaf,
+6,1552480620,2,0,czy nic sie nie zmienilo?,sprawdzam czy dziala jak natura chciala,
