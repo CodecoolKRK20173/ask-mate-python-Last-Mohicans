@@ -2,9 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Question</title>
 </head>
 <body>
-
+    <table border="2">
+        <tr>
+            <th>submission_time</th>
+            <th>view_number</th>
+            <th>vote_number</th>
+            <th>title</th>
+            <th>message</th>
+            <th>image</th>
+        </tr>
+        <tr>
+            {% for key, value in question.items() %}
+                {% if key == 'submission_time' %}
+                    <td>
+                        {{ value[0] }}.{{ value[1] }}.{{ value[2] }} {{ value[3] }}:{{ value[4] }}:{{ value[5] }}
+                    </td>
+                {% else %}
+                    <td>{{ value }}</td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    </table>
+    <br>
+    <h2>Answers:</h2>
+    <br>
+    <table border="2">
+        <tr>
+            <th>id</th>
+            <th>submission_time</th>
+            <th>vote_number</th>
+            <th>question_id</th>
+            <th>message</th>
+            <th>image</th>
+        </tr>
+        {% if answers %}
+        {% for id, answer in answers.items() %}
+        <tr>
+            <td>{{ id }}</td>
+            {% for key, value in answer.items() %}
+                {% if key == 'submission_time' %}
+                    <td>
+                        {{ value[0] }}.{{ value[1] }}.{{ value[2] }} {{ value[3] }}:{{ value[4] }}:{{ value[5] }}
+                    </td>
+                {% else %}
+                    <td>{{ value }}</td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </table>
 </body>
 </html>

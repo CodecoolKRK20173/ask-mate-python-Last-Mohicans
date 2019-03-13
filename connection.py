@@ -5,14 +5,14 @@ import time
 QUESTION_FIELDS = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 ANSWER_FIELDS = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 
-QUESTION_FILE = './sample_data/question.csv'
-ANSWER_FILE = './sample_data/answer.csv'
+QUESTIONS_FILE = './sample_data/question.csv'
+ANSWERS_FILE = './sample_data/answer.csv'
 
 
 def export_data(data_base, file):
-    if file == QUESTION_FILE:
+    if file == QUESTIONS_FILE:
         fields = QUESTION_FIELDS
-    elif file == ANSWER_FILE:
+    elif file == ANSWERS_FILE:
         fields = ANSWER_FIELDS
     else:
         return False
@@ -34,9 +34,9 @@ def import_data(file):
     rows = []
     index = 0
 
-    if file == QUESTION_FILE:
+    if file == QUESTIONS_FILE:
         fields = QUESTION_FIELDS
-    elif file == ANSWER_FILE:
+    elif file == ANSWERS_FILE:
         fields = ANSWER_FIELDS
     else:
         return dictionary

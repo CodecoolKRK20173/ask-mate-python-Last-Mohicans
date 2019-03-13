@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-    <table>
+    <table border="2">
         <tr>
             <th>id</th>
             <th>submission_time</th>
@@ -21,7 +21,7 @@
             <td>{{ id }}</td>
             {% for key, value in question.items() %}
                 {% if key == 'title' %}
-                    <td><a href="/story/{{ id }}">{{ value }}</td>
+                    <td><a href="/question/{{ id }}">{{ value }}</td>
                 {% else %}
                     {% if key == 'submission_time' %}
                         <td>
