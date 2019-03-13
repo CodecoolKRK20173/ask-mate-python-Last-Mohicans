@@ -14,6 +14,8 @@
             <th>title</th>
             <th>message</th>
             <th>image</th>
+            <th></th>
+            <th></th>
         </tr>
         {% if questions %}
         {% for id, question in questions.items() %}
@@ -32,6 +34,16 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}
+            <td>
+                <form action="/question/{{ id }}/vote-up" method="post">
+                    <button type="submit">Vote UP</button>
+                </form>
+            </td>
+            <td>
+                <form action="/question/{{ id }}/vote-down" method="post">
+                    <button type="submit">Vote Down</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
         {% endif %}

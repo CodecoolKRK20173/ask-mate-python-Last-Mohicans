@@ -11,7 +11,7 @@ def index():
 
 
 @app.route('/list')
-def list():
+def questions_list():
     questions = data_manager.get_questions()
     return render_template('list.html', questions=questions)
 
@@ -20,17 +20,40 @@ def list():
 # @app.route('/question/<question_id>/edit')
 # @app.route('/question/<question_id>/delete')
 # @app.route('/question/<question_id>/new-answer')
-# @app.route('/question/<question_id>/vote-up')
-# @app.route('/question/<question_id>/vote-down')
 def route_question(question_id=None):
     if question_id:
-        questions = data_manager.update_question_view_number(question_id)
+        data_manager.update_question_view_number(question_id)
+        questions = data_manager.get_questions()
         answers = data_manager.get_answers_by_question_id(question_id)
         return render_template('question.html', question=questions[question_id], answers=answers)
     return redirect('/list')
 
 # @app.route('/question/<question_id>/<option>') # zamiast 5 innych
 # options = ['edit', 'delete', 'new-answer', 'vote-up', 'vote-down']
+
+
+@app.route('/question/<question_id>/vote-up', methods=['POST'])
+def question_vote_up(question_id=None):
+    data_manager.update_question_vote_number(question_id, 1)
+    return redirect('/list')
+
+
+@app.route('/question/<question_id>/vote-down', methods=['POST'])
+def question_vvote_down(question_id=None):
+    data_manager.update_question_vote_number(question_id, -1)
+    return redirect('/list')
+
+
+@app.route('/answer/<answer_id>/vote-up', methods=['POST'])
+def answer_vote_up(answer_id=None):
+    question_id = data_manager.update_answer_vote_number(answer_id, 1)
+    return redirect(f'/question/{question_id}')
+
+
+@app.route('/answer/<answer_id>/vote-down', methods=['POST'])
+def answer_vote_down(answer_id=None):
+    question_id = data_manager.update_answer_vote_number(answer_id, -1)
+    return redirect(f'/question/{question_id}')
 
 
 @app.route('/add-question', methods=['GET', 'POST'])

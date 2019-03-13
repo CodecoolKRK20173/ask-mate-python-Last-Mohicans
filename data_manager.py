@@ -16,13 +16,29 @@ def get_answers_by_question_id(id):
     return answers
 
 
-# updates view_number of question by given id, and returns dictionary of questions
+# updates view_number of question of given id
 def update_question_view_number(id):
     questions = connection.import_data(connection.QUESTIONS_FILE)
     question = questions[id]
     questions[id]['view_number'] = int(question['view_number']) + 1
     connection.export_data(questions, connection.QUESTIONS_FILE)
-    return  questions
+
+
+# updates vote_number of question of given id by value
+def update_question_vote_number(id, value):
+    questions = connection.import_data(connection.QUESTIONS_FILE)
+    question = questions[id]
+    questions[id]['vote_number'] = int(question['vote_number']) + value
+    connection.export_data(questions, connection.QUESTIONS_FILE)
+
+
+# updates vote_number of answer of given id by value, returns question_id
+def update_answer_vote_number(id, value):
+    answers = connection.import_data(connection.ANSWERS_FILE)
+    answer = answers[id]
+    answers[id]['vote_number'] = int(answer['vote_number']) + value
+    connection.export_data(answers, connection.ANSWERS_FILE)
+    return answer['question_id']
 
 
 def add_question(id, question):
