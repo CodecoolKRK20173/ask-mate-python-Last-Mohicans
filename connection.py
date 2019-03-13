@@ -50,13 +50,14 @@ def import_data(file):
             index += 1
 
     for row in rows:
-        for i, field in enumerate(fields):
-            if field == 'id':
-                dictionary[row[0]] = {}
-            else:
-                if field == 'submission_time':
-                    dictionary[row[0]][field] = time.localtime(int(row[i]))
+        if row:
+            for i, field in enumerate(fields):
+                if field == 'id':
+                    dictionary[row[0]] = {}
                 else:
-                    dictionary[row[0]][field] = row[i]
+                    if field == 'submission_time':
+                        dictionary[row[0]][field] = time.localtime(int(row[i]))
+                    else:
+                        dictionary[row[0]][field] = row[i]
 
     return dictionary
