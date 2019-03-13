@@ -9,6 +9,7 @@ app = Flask(__name__)
 def index():
     return redirect('/list')
 
+
 @app.route('/list')
 def list():
     questions = data_manager.get_questions()
@@ -32,9 +33,22 @@ def route_question(question_id=None):
 # options = ['edit', 'delete', 'new-answer', 'vote-up', 'vote-down']
 
 
-@app.route('/add-question')
-def route_list():
-    pass
+@app.route('/add-question', methods=['GET', 'POST'])
+def route_add_question():
+    question_headers = connection.QUESTION_FIELDS[4:]
+    if request.method == 'POST':
+        values = []
+        for header in question_headers:
+            values.append(request.form[header])
+
+        added_question = dict(zip(question_headers, values))
+        connection.export_data(added_question, connection.QUESTION_FILE)
+
+        return redirect('/')
+
+    else:
+
+        return render_template('add-question.html', question_headers=question_headers)
 
 
 if __name__ == "__main__":
