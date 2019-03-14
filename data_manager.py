@@ -6,6 +6,12 @@ def get_questions():
     return connection.import_data(connection.QUESTIONS_FILE)
 
 
+# returns question of given id (dictionary)
+def get_question_by_id(id):
+    questions = connection.import_data(connection.QUESTIONS_FILE)
+    return questions[id]
+
+
 # returns answers associated with question of given id (dictionary of dictionaries)
 def get_answers_by_question_id(id):
     data = connection.import_data(connection.ANSWERS_FILE)
@@ -16,6 +22,13 @@ def get_answers_by_question_id(id):
             answers[answer_id] = answer
 
     return answers
+
+
+# updates question of give id
+def update_question(updated_question, id):
+    questions = connection.import_data(connection.QUESTIONS_FILE)
+    questions[id] = updated_question
+    connection.export_data(questions, connection.QUESTIONS_FILE)
 
 
 # updates view_number of question of given id

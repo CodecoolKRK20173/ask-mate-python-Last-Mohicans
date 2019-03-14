@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, flash, render_template, redirect, request, url_for
 import data_manager
 import util
 import connection
@@ -24,17 +24,13 @@ def questions_list():
 
 
 @app.route('/question/<question_id>')
-# @app.route('/question/<question_id>/edit')
-# @app.route('/question/<question_id>/delete')
-def route_question(question_id=None):
-    if question_id:
-        data_manager.update_question_view_number(question_id)
-        questions = data_manager.get_questions()
-        regular_answers = data_manager.get_answers_by_question_id(question_id)
-        regular_answers = {int(key): value for key, value in regular_answers.items()}
-        ordered_answers = util.reversed_order_dict(regular_answers)
-        return render_template('question.html', question=questions[question_id], answers=ordered_answers, question_id=question_id)
-    return redirect('/list')
+def route_question(question_id):
+    data_manager.update_question_view_number(question_id)
+    questions = data_manager.get_questions()
+    regular_answers = data_manager.get_answers_by_question_id(question_id)
+    regular_answers = {int(key): value for key, value in regular_answers.items()}
+    ordered_answers = util.reversed_order_dict(regular_answers)
+    return render_template('question.html', question=questions[question_id], answers=ordered_answers, question_id=question_id)
 
 # @app.route('/question/<question_id>/<option>') # zamiast 5 innych
 # options = ['edit', 'delete', 'new-answer', 'vote-up', 'vote-down']
@@ -75,6 +71,7 @@ def route_add_question():
                   request.form['title'],
                   request.form['message'],
                   '']
+<<<<<<< HEAD
 
         if 'file' not in request.files:
             flash('No file part')
@@ -94,18 +91,40 @@ def route_add_question():
 
             values[6] = url
 
+=======
+>>>>>>> 9006891589a7fff6d8a958a53ac2b50543ccb85c
         data_manager.add_question(values)
-
         return redirect('/')
-
     else:
+        return render_template('add-question.html', id=None, question=None)
+
+
+@app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
+def route_edit_question(question_id):
+    if request.method == 'POST':
+        question = data_manager.get_question_by_id(question_id)
+        question['title'] = request.form['title']
+        question['message'] = request.form['message']
+        data_manager.update_question(question, question_id)
+        return redirect('/')
+    else:
+<<<<<<< HEAD
         question_headers = data_manager.get_question_fields()[4:7]
         return render_template('add-question.html', question_headers=question_headers)
+=======
+        question = data_manager.get_question_by_id(question_id)
+        return render_template('add-question.html', id=question_id, question=question)
+
+
+@app.route('/question/<question_id>/delete', methods=['POST'])
+def route_remove_question(question_id):
+    data_manager.remove_question(question_id)
+    return redirect('/list')
+>>>>>>> 9006891589a7fff6d8a958a53ac2b50543ccb85c
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def route_add_answer(question_id):
-    # question_id = question_id
     if request.method == 'GET':
         questions = data_manager.get_questions()
         answers = data_manager.get_answers_by_question_id(question_id)
@@ -123,12 +142,6 @@ def route_add_answer(question_id):
         data_manager.add_answer(values)
 
         return redirect(f'/question/{question_id}')
-
-
-@app.route('/question/<question_id>/delete', methods=['POST'])
-def route_remove_question(question_id):
-    data_manager.remove_question(question_id)
-    return redirect('/list')
 
 
 @app.route('/answer/<answer_id>/delete', methods=['POST'])

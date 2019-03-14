@@ -16,6 +16,8 @@
             <th>image</th>
             <th></th>
             <th></th>
+            <th></th>
+            <th></th>
         </tr>
         {% if questions %}
         {% for id, question in questions.items() %}
@@ -59,6 +61,11 @@
             <td>
                 <form action="/question/{{ id }}/vote-down" method="post">
                     <button type="submit">Vote Down</button>
+                </form>
+            </td>
+            <td>
+                <form action="/question/{{ id }}/edit" method="get">
+                    <button type="submit">Edit</button>
                 </form>
             </td>
             <td>
