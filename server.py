@@ -1,9 +1,13 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, url_for
 import data_manager
 import util
+import connection
+from werkzeug.utils import secure_filename
+import os
 
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = connection.UPLOAD_FOLDER
 
 
 @app.route('/')
@@ -97,7 +101,7 @@ def route_add_answer(question_id):
 
         data_manager.add_answer(values)
 
-        return redirect('/question/'+question_id)
+        return redirect(f'/question/{question_id}')
 
 
 @app.route('/question/<question_id>/delete', methods=['POST'])
@@ -112,9 +116,44 @@ def route_remove_answer(answer_id):
     return redirect(f'/question/{question_id}')
 
 
+# @app.route('/question/<question_id>/add-image', methods=['POST'])
+# def question_add_image(question_id):
+#     data_manager.update_question_vote_number(question_id, -1)
+#
+#     return redirect('/list')
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in connection.ALLOWED_EXTENSIONS
+
+
+@app.route('/list', methods=['GET', 'POST'])
+def upload_file():
+    regular_questions = data_manager.get_questions()
+    ordered_questions = util.reversed_order_dict(regular_questions)
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            # flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            url = url_for('upload_file', filename=filename)
+
+            return render_template('list.html', questions=ordered_questions, filename=filename)
+    return render_template('list.html', questions=ordered_questions) #, filename=filename)
+
+
 if __name__ == "__main__":
     app.run(
         host='127.0.0.1',
         debug=True,  # Allow verbose error reports
         port=5000  # Set custom port
-    )
+            )

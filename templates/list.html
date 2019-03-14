@@ -30,11 +30,27 @@
                         <td>
                             {{ value[0] }}.{{ value[1] }}.{{ value[2] }} {{ value[3] }}:{{ value[4] }}:{{ value[5] }}
                         </td>
+
                     {% else %}
-                        <td>{{ value }}</td>
+                        {% if key == 'image' %}
+                            {% if filename %}
+                            <td>
+                              <img src="{{url_for('static',filename=filename)}}" style="vertical-align: bottom;" />
+                            </td>
+                            {% else %}
+                            <td>{{ value }}</td>
+                            {% endif %}
+                        {% else %}
+                            <td>{{ value }}</td>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
             {% endfor %}
+            <td><form method=post enctype=multipart/form-data>
+                <p><input type=file name=file>
+                    <input type=submit value=Upload>
+            </form>
+            </td>
             <td>
                 <form action="/question/{{ id }}/vote-up" method="post">
                     <button type="submit">Vote UP</button>

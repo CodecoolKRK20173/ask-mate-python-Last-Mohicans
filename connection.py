@@ -7,6 +7,8 @@ ANSWER_FIELDS = ['id', 'submission_time', 'vote_number', 'question_id', 'message
 
 QUESTIONS_FILE = './sample_data/question.csv'
 ANSWERS_FILE = './sample_data/answer.csv'
+UPLOAD_FOLDER = './static/'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 
 def export_data(data_base, file):
