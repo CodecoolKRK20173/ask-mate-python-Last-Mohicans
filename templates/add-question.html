@@ -14,7 +14,8 @@
           action="/question/{{ id }}/edit"
           {% else %}
           action="/add-question"
-          {% endif %} method="post"
+          {% endif %}
+          method="post"
           enctype=multipart/form-data>
         <input type=file name=file>
         <label for= "title" ><br>title:<br></label>
@@ -24,6 +25,7 @@
 
        <br><button type="submit" value=Upload>Add User Question</button>
     </form>
-
+    <br>
+    <tr><a href="/list">Back to list </a></tr>
 </body>
 </html>

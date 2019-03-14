@@ -147,12 +147,25 @@ def route_add_answer(question_id):
 
     elif request.method == 'POST':
 
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
         values = [data_manager.get_new_answer_id(),
                   util.get_timestamp(),
                   '0',
                   question_id,
                   request.form['message'],
-                  '']
+                  filename]
 
         data_manager.add_answer(values)
 

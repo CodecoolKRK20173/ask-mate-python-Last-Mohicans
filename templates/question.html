@@ -20,6 +20,17 @@
                     <td>
                         {{ value[0] }}.{{ value[1] }}.{{ value[2] }} {{ value[3] }}:{{ value[4] }}:{{ value[5] }}
                     </td>
+                {% elif key == 'image' %}
+                            {% if value %}
+                            <td>
+                              <img src="{{url_for('static',filename=value)}}"
+                                   style="vertical-align: bottom;"
+
+                              />
+                            </td>
+                            {% else %}
+                            <td>{{ value }}</td>
+                            {% endif %}
                 {% else %}
                     <td>{{ value }}</td>
                 {% endif %}
@@ -53,9 +64,17 @@
                     <td>
                         {{ value[0] }}.{{ value[1] }}.{{ value[2] }} {{ value[3] }}:{{ value[4] }}:{{ value[5] }}
                     </td>
+                {% elif key == 'image' %}
+                        {% if value %}
+                            <td>
+                              <img src="{{url_for('static',filename=value)}}" style="vertical-align: bottom;" />
+                            </td>
+                        {% else %}
+                            <td>{{ value }}</td>
+                        {% endif %}
                 {% else %}
                     <td>{{ value }}</td>
-                {% endif %}
+            {% endif %}
             {% endfor %}
             <td>
                 <form action="/answer/{{ id }}/vote-up" method="post">
@@ -75,9 +94,10 @@
         </tr>
         {% endfor %}
         {% endif %}
+        <br>
     </table>
 
-        <tr><a href="/question/{{question_id}}/new-answer">Add an answer </a></tr>
+        <h1><tr><a href="/question/{{question_id}}/new-answer">Add an answer </a></tr></h1>
             <!--<button type="button" form="my_form">ok</button>-->
 
 </body>

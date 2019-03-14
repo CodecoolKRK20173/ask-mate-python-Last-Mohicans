@@ -21,16 +21,19 @@
     <br>
         <tr><a href="/question/{{question_id}}">Back to question </a></tr>
     <br>
-        <tr><a href="/list">Back to list of questions </a></tr>
+        <tr><a href="/list">Back to list of questions </a><br></tr>
     <br>
 
 
-    <form action="/question/{{question_id}}/new-answer" method="post">
+    <form action="/question/{{question_id}}/new-answer"
+          method="post"
+          enctype=multipart/form-data>
+        <input type=file name=file>
         <label for="message"><br>Answer:<br></label>
         <textarea id="message" name="message" rows="8" cols="80" required></textarea>
-
+        <br>
         <tr>
-          <button type="submit">Add answer</button>
+          <button type="submit" value=Upload>Add answer</button>
         </tr>
 
     </form>
