@@ -7,8 +7,16 @@
 <body>
     <form action="/add-question" method="post">
         {% for header in question_headers %}
-        <label for= "{{header}}" ><br>{{header}}:<br></label>
-        <textarea id="{{header}}" name="{{header}}" rows="5" cols="60" required></textarea>
+            {% if header =! 'image' %}
+                <label for= "{{header}}" ><br>{{header}}:<br></label>
+                <textarea id="{{header}}" name="{{header}}" rows="5" cols="60" required></textarea>
+            {% else %}
+                <td><form method=post enctype=multipart/form-data>
+                <p><input type=file name=file>
+                    <input type=submit value=Upload>
+                    </form>
+                </td>
+            {% endif %}
         {% endfor %}
        <br><button type="submit">Add User Question</button>
     </form>
