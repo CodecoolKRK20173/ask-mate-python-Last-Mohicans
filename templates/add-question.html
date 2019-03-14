@@ -10,13 +10,20 @@
 </head>
 <body>
 
-    <form {% if question %} action="/question/{{ id }}/edit" {% else %} action="/add-question" {% endif %} method="post">
+    <form {% if question %}
+          action="/question/{{ id }}/edit"
+          {% else %}
+          action="/add-question"
+          {% endif %} method="post"
+          enctype=multipart/form-data>
+        <input type=file name=file>
         <label for= "title" ><br>title:<br></label>
         <textarea id="title" name="title" rows="5" cols="60" required>{{ question["title"] if question }}</textarea>
         <label for= "message" ><br>message:<br></label>
         <textarea id="message" name="message" rows="5" cols="60" required>{{ question["message"] if question }}</textarea>
 
-       <br><button type="submit">Add User Question</button>
+       <br><button type="submit" value=Upload>Add User Question</button>
     </form>
+
 </body>
 </html>
