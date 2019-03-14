@@ -67,6 +67,7 @@ def answer_vote_down(answer_id):
 @app.route('/add-question', methods=['GET', 'POST'])
 def route_add_question():
     if request.method == 'POST':
+
         values = [data_manager.get_new_question_id(),
                   util.get_timestamp(),
                   '0',
@@ -75,12 +76,30 @@ def route_add_question():
                   request.form['message'],
                   '']
 
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            # flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            url = url_for('static', filename=filename)
+
+            # return render_template('list.html', questions=ordered_questions, filename=filename)
+
+            values[6] = url
+
         data_manager.add_question(values)
 
         return redirect('/')
 
     else:
-        question_headers = data_manager.get_question_fields()[4:6]
+        question_headers = data_manager.get_question_fields()[4:7]
         return render_template('add-question.html', question_headers=question_headers)
 
 
@@ -148,7 +167,7 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            url = url_for('upload_file', filename=filename)
+            url = url_for('static', filename=filename)
 
             return render_template('list.html', questions=ordered_questions, filename=filename)
     return render_template('list.html', questions=ordered_questions) #, filename=filename)
