@@ -96,6 +96,7 @@ def get_question_fields():
 # returns new id for new question
 def get_new_question_id():
     data = connection.import_data(connection.QUESTIONS_FILE)
+    data = {int(key): value for key, value in data.items()}
     ids = sorted(data.keys())
     if ids:
         return str(int(ids[-1]) + 1)
@@ -106,6 +107,7 @@ def get_new_question_id():
 # eturns new id for new answer
 def get_new_answer_id():
     data = connection.import_data(connection.ANSWERS_FILE)
+    data = {int(key): value for key, value in data.items()}
     ids = sorted(data.keys())
     if ids:
         return str(int(ids[-1]) + 1)

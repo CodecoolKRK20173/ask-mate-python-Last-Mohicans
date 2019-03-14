@@ -18,6 +18,7 @@ def index():
 @app.route('/list')
 def questions_list():
     regular_questions = data_manager.get_questions()
+    regular_questions = {int(key): value for key, value in regular_questions.items()}
     ordered_questions = util.reversed_order_dict(regular_questions)
     return render_template('list.html', questions=ordered_questions)
 
@@ -30,6 +31,7 @@ def route_question(question_id=None):
         data_manager.update_question_view_number(question_id)
         questions = data_manager.get_questions()
         regular_answers = data_manager.get_answers_by_question_id(question_id)
+        regular_answers = {int(key): value for key, value in regular_answers.items()}
         ordered_answers = util.reversed_order_dict(regular_answers)
         return render_template('question.html', question=questions[question_id], answers=ordered_answers, question_id=question_id)
     return redirect('/list')
@@ -130,6 +132,7 @@ def allowed_file(filename):
 @app.route('/list', methods=['GET', 'POST'])
 def upload_file():
     regular_questions = data_manager.get_questions()
+    regular_questions = {int(key): value for key, value in regular_questions.items()}
     ordered_questions = util.reversed_order_dict(regular_questions)
     if request.method == 'POST':
         # check if the post request has the file part

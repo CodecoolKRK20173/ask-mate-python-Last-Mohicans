@@ -9,9 +9,9 @@ BUT in my theme i also using jquery via webpack so the loading order is now foll
 jquery
 booklet
 app.js (bundled file with webpack, including jquery)",images/image1.png
-10,1552519736,0,0,adfaf,afsfaf,
+10,1552553300,0,0,nowe pytanko,na sprawdzenie czy doda sie 11 rekord,
+11,1552553486,3,0,jeszcze raz sprawdzamy,czy id nada sie powyzej 10 inie nadpisze 10,
 3,1552470158,5,0,no to jeszcze raz to samo pytanie,"no wlasnie co tu zrobic, a wazniejsze jeszcze jak pokazac odpowiedz do pytania, czy jakos pod spodem (pod pytaniem) czy mo¿e jakoœ obok? no i co technicznie zastosowac?",
 6,1552480620,18,2,czy nic sie nie zmienilo?,sprawdzam czy dziala jak natura chciala,
 8,1552509457,2,1,jak zrobic forum,chodzi o weganskie kokosanki,
 9,1552513665,2,1,asfafs,asafaf,
-10,1552521893,0,0,aad,add,
