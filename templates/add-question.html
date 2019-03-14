@@ -2,16 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add</title>
+    {% if question %}
+        <title>Edit question</title>
+    {% else %}
+        <title>Add question</title>
+    {% endif %}
 </head>
 <body>
-    <form action="/add-question" method="post">
-        {% for header in question_headers %}
-        <label for= "{{header}}" ><br>{{header}}:<br></label>
-        <textarea id="{{header}}" name="{{header}}" rows="5" cols="60" required></textarea>
-        {% endfor %}
+    <form {% if question %} action="/question/{{ id }}/edit" {% else %} action="/add-question" {% endif %} method="post">
+        <label for= "title" ><br>title:<br></label>
+        <textarea id="title" name="title" rows="5" cols="60" required>{{ question["title"] if question }}</textarea>
+        <label for= "message" ><br>message:<br></label>
+        <textarea id="message" name="message" rows="5" cols="60" required>{{ question["message"] if question }}</textarea>
        <br><button type="submit">Add User Question</button>
     </form>
-
 </body>
 </html>
