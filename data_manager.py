@@ -1,4 +1,5 @@
 import connection
+from psycopg2 import sql
 
 
 # returns questions (dictionary of dictionaries)
@@ -107,6 +108,8 @@ def get_question_fields():
 
 
 # returns new id for new question
+# id powinny byc unikalne
+# jedna metoda zamiast dwoch z argumentem
 def get_new_question_id():
     data = connection.import_data(connection.QUESTIONS_FILE)
     data = {int(key): value for key, value in data.items()}
@@ -126,3 +129,23 @@ def get_new_answer_id():
         return str(int(ids[-1]) + 1)
     else:
         return 0
+
+
+@connection.connection_handler
+def get_mentor_names_by_first_name(cursor, first_name):
+    # cursor.execute("""
+    #                 SELECT first_name, last_name FROM mentors
+    #                 WHERE first_name = %(f_n)s ORDER BY first_name;
+    #                """,
+    #                {'f_n': first_name})
+    # names = cursor.fetchall()
+    # return names
+
+    cursor.execute(
+        sql.SQL("select {col1}, {col2} from {table} ").
+            format(col1=sql.Identifier('first_name'),
+                   col2=sql.Identifier('last_name'),
+                   table=sql.Identifier('mentors'))
+    )
+    names = cursor.fetchall()
+    return names
