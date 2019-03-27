@@ -6,8 +6,10 @@ from psycopg2 import sql
 @connection.connection_handler
 def get_questions(cursor):
     cursor.execute(
+
         sql.SQL("select * from {table} ORDER BY {column} DESC").format(
             table=sql.Identifier('question'), column=sql.Identifier('submission_time'))
+
     )
     questions = cursor.fetchall()
     return questions
@@ -47,11 +49,19 @@ def get_answers_by_question_id(cursor, question_id):
     return answers
 
 
-# updates question of give id
-def update_question(updated_question, id):
-    questions = connection.import_data(connection.QUESTIONS_FILE)
-    questions[id] = updated_question
-    connection.export_data(questions, connection.QUESTIONS_FILE)
+@connection.connection_handler
+def update_question(cursor, values):
+
+    columns = ['title', 'message', 'image']
+    query = sql.SQL("update {table} set ({column}) = ({value}) where id = {q_id}").format(
+            table=sql.Identifier('question'),
+            column=sql.SQL(', ').join(map(sql.Identifier, columns)),
+            value=sql.SQL(', ').join(map(sql.Literal, values[1:])),
+            q_id=sql.Literal(values[0]))
+
+    cursor.execute(
+        sql.SQL(query.as_string(cursor))
+    )
 
 
 # updates view_number of question of given id

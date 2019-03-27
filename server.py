@@ -93,8 +93,9 @@ def route_add_question():
 def route_edit_question(question_id):
     if request.method == 'POST':
         question = data_manager.get_question_by_id(question_id)
-        question['title'] = request.form['title']
-        question['message'] = request.form['message']
+        # question['title'] = request.form['title']
+        # question['message'] = request.form['message']
+        image = ''
 
         if 'file' not in request.files:
             flash('No file part')
@@ -109,8 +110,16 @@ def route_edit_question(question_id):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-            question['image'] = filename
-        data_manager.update_question(question, question_id)
+            image = filename
+
+        values = [question_id,
+                  request.form['title'],
+                  request.form['message'],
+                  image]
+
+        # data_manager.add_question(values)
+
+        data_manager.update_question(values)  #question_id, question,
         return redirect('/')
     else:
 
