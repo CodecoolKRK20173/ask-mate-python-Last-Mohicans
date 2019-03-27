@@ -41,12 +41,12 @@
             {% endfor %}
 
             <td>
-                <form action="/question/{{ id }}/vote-up" method="post">
+                <form action="/question/{{ question['id'] }}/vote-up" method="post">
                     <button type="submit">Vote UP</button>
                 </form>
             </td>
             <td>
-                <form action="/question/{{ id }}/vote-down" method="post">
+                <form action="/question/{{ question['id'] }}/vote-down" method="post">
                     <button type="submit">Vote Down</button>
                 </form>
             </td>
@@ -56,7 +56,7 @@
                 </form>
             </td>
             <td>
-                <form action="/question/{{ id }}/delete" method="post">
+                <form action="/question/{{ question['id'] }}/delete" method="post">
                     <button type="submit">Delete</button>
                 </form>
             </td>

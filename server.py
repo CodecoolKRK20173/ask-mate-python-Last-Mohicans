@@ -37,27 +37,24 @@ def route_question(question_id):
 # options = ['edit', 'delete', 'new-answer', 'vote-up', 'vote-down']
 
 
-@app.route('/question/<question_id>/vote-up', methods=['POST'])
-def question_vote_up(question_id):
-    data_manager.update_question_vote_number(question_id, 1)
+@app.route('/question/<question_id>/<vote>', methods=['POST'])
+def question_vote(question_id, vote):
+    if vote == 'vote-up':
+        value = 1
+    elif vote == 'vote-down':
+        value = -1
+    data_manager.update_vote_number('question', question_id, value)
     return redirect('/list')
 
 
-@app.route('/question/<question_id>/vote-down', methods=['POST'])
-def question_vote_down(question_id):
-    data_manager.update_question_vote_number(question_id, -1)
-    return redirect('/list')
-
-
-@app.route('/answer/<answer_id>/vote-up', methods=['POST'])
-def answer_vote_up(answer_id):
-    question_id = data_manager.update_answer_vote_number(answer_id, 1)
-    return redirect(f'/question/{question_id}')
-
-
-@app.route('/answer/<answer_id>/vote-down', methods=['POST'])
-def answer_vote_down(answer_id):
-    question_id = data_manager.update_answer_vote_number(answer_id, -1)
+@app.route('/answer/<answer_id>/<vote>', methods=['POST'])
+def answer_vote(answer_id, vote):
+    if vote == 'vote-up':
+        value = 1
+    elif vote == 'vote-down':
+        value = -1
+    data_manager.update_vote_number('answer', answer_id, value)
+    question_id = data_manager.get_question_id_by_answer_id(answer_id)
     return redirect(f'/question/{question_id}')
 
 
