@@ -20,31 +20,22 @@
             <th></th>
         </tr>
         {% if questions %}
-        {% for id, question in questions.items() %}
-
+        {% for question in questions %}
         <tr>
-            <td>{{ id }}</td>
             {% for key, value in question.items() %}
                 {% if key == 'title' %}
-                    <td><a href="/question/{{ id }}">{{ value }}</td>
+                    <td><a href="/question/{{ question['id'] }}">{{ value }}</td>
                 {% else %}
-                    {% if key == 'submission_time' %}
+                    {% if key == 'image' %}
+                        {% if value %}
                         <td>
-                            {{ value[0] }}.{{ value[1] }}.{{ value[2] }} {{ value[3] }}:{{ value[4] }}:{{ value[5] }}
+                          <img src="{{url_for('static',filename=value)}}" style="vertical-align: bottom;" />
                         </td>
-
-                    {% else %}
-                        {% if key == 'image' %}
-                            {% if value %}
-                            <td>
-                              <img src="{{url_for('static',filename=value)}}" style="vertical-align: bottom;" />
-                            </td>
-                            {% else %}
-                            <td>{{ value }}</td>
-                            {% endif %}
                         {% else %}
-                            <td>{{ value }}</td>
+                        <td>{{ value }}</td>
                         {% endif %}
+                    {% else %}
+                        <td>{{ value }}</td>
                     {% endif %}
                 {% endif %}
             {% endfor %}
