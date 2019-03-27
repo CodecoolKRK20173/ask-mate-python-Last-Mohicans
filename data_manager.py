@@ -85,9 +85,18 @@ def add_question(cursor, values):
 
 
 # adds new answer consisting of given values (list) to data storage file
-def add_answer(values):
-    added_answer = dict(zip(connection.ANSWER_FIELDS, values))
-    connection.append_data(added_answer, connection.ANSWERS_FILE)
+@connection.connection_handler
+def add_answer(cursor, values):
+    columns = ['submission_time', 'vote_number', 'question_id', 'message', 'image']
+
+    query = sql.SQL("insert into {table} ({}) values ({})").format(
+        sql.SQL(', ').join(map(sql.Identifier, columns)),
+        sql.SQL(', ').join(map(sql.Literal, values)),
+        table=sql.Identifier('answer')
+    )
+    cursor.execute(
+        sql.SQL(query.as_string(cursor))
+    )
 
 
 # removes question of given id, and associated answers
@@ -126,17 +135,6 @@ def export_questions(data):
 # returns a list of fields for question
 def get_question_fields():
     return connection.QUESTION_FIELDS
-
-
-# eturns new id for new answer
-def get_new_answer_id():
-    data = connection.import_data(connection.ANSWERS_FILE)
-    data = {int(key): value for key, value in data.items()}
-    ids = sorted(data.keys())
-    if ids:
-        return str(int(ids[-1]) + 1)
-    else:
-        return 0
 
 
 @connection.connection_handler

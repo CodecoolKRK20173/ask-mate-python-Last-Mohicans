@@ -135,9 +135,9 @@ def route_remove_question(question_id):
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def route_add_answer(question_id):
     if request.method == 'GET':
-        questions = data_manager.get_questions()
+        question = data_manager.get_question_by_id(question_id)
         answers = data_manager.get_answers_by_question_id(question_id)
-        return render_template('answer.html', question=questions[question_id], answers=answers, question_id=question_id)
+        return render_template('answer.html', question=question, answers=answers)
 
     elif request.method == 'POST':
 
@@ -154,8 +154,7 @@ def route_add_answer(question_id):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        values = [data_manager.get_new_answer_id(),
-                  util.get_timestamp(),
+        values = [util.get_timestamp(),
                   '0',
                   question_id,
                   request.form['message'],
