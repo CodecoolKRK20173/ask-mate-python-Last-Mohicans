@@ -6,7 +6,8 @@ from psycopg2 import sql
 @connection.connection_handler
 def get_questions(cursor):
     cursor.execute(
-        sql.SQL("select * from {table} ").format(table=sql.Identifier('question'))
+        sql.SQL("select * from {table} ORDER BY {column} DESC").format(
+            table=sql.Identifier('question'), column=sql.Identifier('submission_time'))
     )
     questions = cursor.fetchall()
     return questions
@@ -16,8 +17,8 @@ def get_questions(cursor):
 @connection.connection_handler
 def get_question_by_id(cursor, question_id):
     cursor.execute(
-        sql.SQL("select * from {table} where id = {q_id}").format(
-            table=sql.Identifier('question'), q_id=sql.Literal(question_id))
+        sql.SQL("select * from {table} where {column} = {q_id}").format(
+            table=sql.Identifier('question'), column=sql.Identifier('id'), q_id=sql.Literal(question_id))
     )
     questions = cursor.fetchall()
     return questions[0]
@@ -27,8 +28,9 @@ def get_question_by_id(cursor, question_id):
 @connection.connection_handler
 def get_answers_by_question_id(cursor, question_id):
     cursor.execute(
-        sql.SQL("select * from {table} where question_id = {q_id}").format(
-            table=sql.Identifier('answer'), q_id=sql.Literal(question_id))
+        sql.SQL("select * from {table} where {question_id} = {given_id} ORDER BY {time} DESC").format(
+            table=sql.Identifier('answer'), question_id=sql.Identifier('question_id'),
+            time=sql.Identifier('submission_time'), given_id=sql.Literal(question_id))
     )
     answers = cursor.fetchall()
     return answers
@@ -42,11 +44,12 @@ def update_question(updated_question, id):
 
 
 # updates view_number of question of given id
-def update_question_view_number(id):
-    questions = connection.import_data(connection.QUESTIONS_FILE)
-    question = questions[id]
-    questions[id]['view_number'] = int(question['view_number']) + 1
-    connection.export_data(questions, connection.QUESTIONS_FILE)
+@connection.connection_handler
+def update_question_view_number(cursor, question_id):
+    cursor.execute(
+        sql.SQL("update {table} set view_number = view_number + 1 where id = {q_id}").format(
+            table=sql.Identifier('question'), q_id=sql.Literal(question_id))
+    )
 
 
 # updates vote_number of question of given id by value (int)
@@ -67,9 +70,18 @@ def update_answer_vote_number(id, value):
 
 
 # adds new question consisting of given values (list) to data storage file
-def add_question(values):
-    added_question = dict(zip(connection.QUESTION_FIELDS, values))
-    connection.append_data(added_question, connection.QUESTIONS_FILE)
+@connection.connection_handler
+def add_question(cursor, values):
+    columns = ['submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
+
+    query = sql.SQL("insert into {table} ({}) values ({})").format(
+        sql.SQL(', ').join(map(sql.Identifier, columns)),
+        sql.SQL(', ').join(map(sql.Literal, values)),
+        table=sql.Identifier('question')
+    )
+    cursor.execute(
+        sql.SQL(query.as_string(cursor))
+    )
 
 
 # adds new answer consisting of given values (list) to data storage file
@@ -114,19 +126,6 @@ def export_questions(data):
 # returns a list of fields for question
 def get_question_fields():
     return connection.QUESTION_FIELDS
-
-
-# returns new id for new question
-# id powinny byc unikalne
-# jedna metoda zamiast dwoch z argumentem
-def get_new_question_id():
-    data = connection.import_data(connection.QUESTIONS_FILE)
-    data = {int(key): value for key, value in data.items()}
-    ids = sorted(data.keys())
-    if ids:
-        return str(int(ids[-1]) + 1)
-    else:
-        return 0
 
 
 # eturns new id for new answer

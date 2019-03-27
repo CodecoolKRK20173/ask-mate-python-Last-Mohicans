@@ -1,9 +1,10 @@
-import time
 import collections
+
+from datetime import datetime
 
 
 def get_timestamp():
-    return int(time.time())
+    return datetime.now()
 
 
 def reversed_order_dict(regular_dict):
