@@ -2,26 +2,35 @@ import connection
 from psycopg2 import sql
 
 
-# returns questions (dictionary of dictionaries)
-def get_questions():
-    return connection.import_data(connection.QUESTIONS_FILE)
+# returns questions (list of dictionaries)
+@connection.connection_handler
+def get_questions(cursor):
+    cursor.execute(
+        sql.SQL("select * from {table} ").format(table=sql.Identifier('question'))
+    )
+    questions = cursor.fetchall()
+    return questions
 
 
 # returns question of given id (dictionary)
-def get_question_by_id(id):
-    questions = connection.import_data(connection.QUESTIONS_FILE)
-    return questions[id]
+@connection.connection_handler
+def get_question_by_id(cursor, question_id):
+    cursor.execute(
+        sql.SQL("select * from {table} where id = {q_id}").format(
+            table=sql.Identifier('question'), q_id=sql.Literal(question_id))
+    )
+    questions = cursor.fetchall()
+    return questions[0]
 
 
-# returns answers associated with question of given id (dictionary of dictionaries)
-def get_answers_by_question_id(id):
-    data = connection.import_data(connection.ANSWERS_FILE)
-    answers = {}
-
-    for answer_id, answer in data.items():
-        if answer['question_id'] == id:
-            answers[answer_id] = answer
-
+# returns answers associated with question of given id (list of dictionaries)
+@connection.connection_handler
+def get_answers_by_question_id(cursor, question_id):
+    cursor.execute(
+        sql.SQL("select * from {table} where question_id = {q_id}").format(
+            table=sql.Identifier('answer'), q_id=sql.Literal(question_id))
+    )
+    answers = cursor.fetchall()
     return answers
 
 

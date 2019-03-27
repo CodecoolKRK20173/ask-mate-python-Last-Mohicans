@@ -16,10 +16,7 @@
         </tr>
         <tr>
             {% for key, value in question.items() %}
-                {% if key == 'submission_time' %}
-                    <td>
-                        {{ value[0] }}.{{ value[1] }}.{{ value[2] }} {{ value[3] }}:{{ value[4] }}:{{ value[5] }}
-                    </td>
+                {% if key == 'id' %}
                 {% elif key == 'image' %}
                             {% if value %}
                             <td>
@@ -56,15 +53,10 @@
             <th></th>
         </tr>
         {% if answers %}
-        {% for id, answer in answers.items() %}
+        {% for answer in answers %}
         <tr>
-            <td>{{ id }}</td>
             {% for key, value in answer.items() %}
-                {% if key == 'submission_time' %}
-                    <td>
-                        {{ value[0] }}.{{ value[1] }}.{{ value[2] }} {{ value[3] }}:{{ value[4] }}:{{ value[5] }}
-                    </td>
-                {% elif key == 'image' %}
+                {% if key == 'image' %}
                         {% if value %}
                             <td>
                               <img src="{{url_for('static',filename=value)}}" style="vertical-align: bottom;" />
