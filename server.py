@@ -132,7 +132,7 @@ def route_edit_question(question_id):
 
 @app.route('/question/<question_id>/delete', methods=['POST'])
 def route_remove_question(question_id):
-    data_manager.remove_question(question_id)
+    data_manager.remove_record('question', question_id)
     return redirect('/list')
 
 
@@ -171,7 +171,8 @@ def route_add_answer(question_id):
 
 @app.route('/answer/<answer_id>/delete', methods=['POST'])
 def route_remove_answer(answer_id):
-    question_id = data_manager.remove_answer(answer_id)
+    question_id = data_manager.get_question_id_by_answer_id(answer_id)
+    data_manager.remove_record('answer', answer_id)
     return redirect(f'/question/{question_id}')
 
 

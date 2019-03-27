@@ -26,6 +26,7 @@ def get_question_by_id(cursor, question_id):
     return questions[0]
 
 
+# returns question_id from answer with given id
 @connection.connection_handler
 def get_question_id_by_answer_id(cursor, answer_id):
     cursor.execute(
@@ -49,6 +50,7 @@ def get_answers_by_question_id(cursor, question_id):
     return answers
 
 
+# updates information of question
 @connection.connection_handler
 def update_question(cursor, values):
 
@@ -116,31 +118,15 @@ def add_answer(cursor, values):
 
 
 # removes question of given id, and associated answers
-def remove_question(id):
-    # import questions
-    # remove question
-    # export modified questions
-    questions = connection.import_data(connection.QUESTIONS_FILE)
-    questions.pop(id, None)
-    connection.export_data(questions, connection.QUESTIONS_FILE)
-    # import answers and answers with questions_id
-    # remove answers with questions_id from answers
-    # export modified answers
-    answers = connection.import_data(connection.ANSWERS_FILE)
-    answers_with_question_id = get_answers_by_question_id(id)
-    [answers.pop(k, None) for k in answers_with_question_id]
-    connection.export_data(answers, connection.ANSWERS_FILE)
+@connection.connection_handler
+def remove_record(cursor, table, id_):
+    cursor.execute(
 
+        sql.SQL("delete from {table} where {id} = {question_id}").format(
+            table=sql.Identifier(table), id=sql.Identifier('id'),
+            question_id=sql.Literal(id_))
 
-# removes answer of given id, and returns question_id
-def remove_answer(id):
-    # import answers
-    # remove answer
-    # export modified answers
-    answers = connection.import_data(connection.ANSWERS_FILE)
-    question_id = answers.pop(id, None)['question_id']
-    connection.export_data(answers, connection.ANSWERS_FILE)
-    return question_id
+    )
 
 
 @connection.connection_handler
