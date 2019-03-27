@@ -6,7 +6,7 @@ from psycopg2 import sql
 @connection.connection_handler
 def get_questions(cursor):
     cursor.execute(
-        sql.SQL("select * from {table} ").format(table=sql.Identifier('question'))
+        sql.SQL("select * from {table} order by 1 desc").format(table=sql.Identifier('question'))
     )
     questions = cursor.fetchall()
     return questions
