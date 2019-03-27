@@ -75,15 +75,6 @@ def update_vote_number(cursor, table, question_id, value):
     )
 
 
-# updates vote_number of answer of given id by value (int), returns question_id
-def update_answer_vote_number(id, value):
-    answers = connection.import_data(connection.ANSWERS_FILE)
-    answer = answers[id]
-    answers[id]['vote_number'] = int(answer['vote_number']) + value
-    connection.export_data(answers, connection.ANSWERS_FILE)
-    return answer['question_id']
-
-
 # adds new question consisting of given values (list) to data storage file
 @connection.connection_handler
 def add_question(cursor, values):
@@ -140,16 +131,6 @@ def remove_answer(id):
     question_id = answers.pop(id, None)['question_id']
     connection.export_data(answers, connection.ANSWERS_FILE)
     return question_id
-
-
-# saves given questions data (dictionary of dictionaries)
-def export_questions(data):
-    connection.export_data(data, connection.QUESTIONS_FILE)
-
-
-# returns a list of fields for question
-def get_question_fields():
-    return connection.QUESTION_FIELDS
 
 
 @connection.connection_handler
