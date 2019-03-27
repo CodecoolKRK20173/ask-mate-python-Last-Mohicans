@@ -24,6 +24,17 @@ def get_question_by_id(cursor, question_id):
     return questions[0]
 
 
+@connection.connection_handler
+def get_question_id_by_answer_id(cursor, answer_id):
+    cursor.execute(
+        sql.SQL("select {question_id} from {table} where {id} = {a_id}").format(
+            table=sql.Identifier('answer'), id=sql.Identifier('id'),
+            question_id=sql.Identifier('question_id'), a_id=sql.Literal(answer_id))
+    )
+    questions = cursor.fetchall()
+    return questions[0]['question_id']
+
+
 # returns answers associated with question of given id (list of dictionaries)
 @connection.connection_handler
 def get_answers_by_question_id(cursor, question_id):
@@ -47,17 +58,21 @@ def update_question(updated_question, id):
 @connection.connection_handler
 def update_question_view_number(cursor, question_id):
     cursor.execute(
-        sql.SQL("update {table} set view_number = view_number + 1 where id = {q_id}").format(
-            table=sql.Identifier('question'), q_id=sql.Literal(question_id))
+        sql.SQL("update {table} set {view_number} = {view_number} + 1 where {question_id} = {given_id}").format(
+            table=sql.Identifier('question'), question_id=sql.Identifier('id'),
+            view_number=sql.Identifier('view_number'), given_id=sql.Literal(question_id))
     )
 
 
-# updates vote_number of question of given id by value (int)
-def update_question_vote_number(id, value):
-    questions = connection.import_data(connection.QUESTIONS_FILE)
-    question = questions[id]
-    questions[id]['vote_number'] = int(question['vote_number']) + value
-    connection.export_data(questions, connection.QUESTIONS_FILE)
+# updates vote_number of record from given table of given id by value (int)
+@connection.connection_handler
+def update_vote_number(cursor, table, question_id, value):
+    cursor.execute(
+        sql.SQL("update {table} set {vote_number} = {vote_number} + {value} where {id} = {given_id}").format(
+            table=sql.Identifier(table), id=sql.Identifier('id'),
+            vote_number=sql.Identifier('vote_number'), value=sql.Literal(value),
+            given_id=sql.Literal(question_id))
+    )
 
 
 # updates vote_number of answer of given id by value (int), returns question_id
