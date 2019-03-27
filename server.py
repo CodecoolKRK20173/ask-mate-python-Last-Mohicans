@@ -22,22 +22,16 @@ def index():
 
 @app.route('/list')
 def questions_list():
-    ordered_questions = data_manager.get_questions()
-    #regular_questions = {int(key): value for key, value in data_manager.get_questions().items()}
-    #ordered_questions = util.reversed_order_dict(regular_questions)
-    return render_template('list.html', questions=ordered_questions)
+    questions = data_manager.get_questions()
+    return render_template('list.html', questions=questions)
 
 
 @app.route('/question/<question_id>')
 def route_question(question_id):
-    #data_manager.update_question_view_number(question_id)
+    data_manager.update_question_view_number(question_id)
     question = data_manager.get_question_by_id(question_id)
     answers = data_manager.get_answers_by_question_id(question_id)
-    #regular_answers = data_manager.get_answers_by_question_id(question_id)
-    #regular_answers = {int(key): value for key, value in regular_answers.items()}
-    #ordered_answers = util.reversed_order_dict(regular_answers)
-
-    return render_template('question.html', question=question, answers=answers, question_id=question_id)
+    return render_template('question.html', question=question, answers=answers)
 
 # @app.route('/question/<question_id>/<option>') # zamiast 5 innych
 # options = ['edit', 'delete', 'new-answer', 'vote-up', 'vote-down']
@@ -86,8 +80,7 @@ def route_add_question():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        values = [data_manager.get_new_question_id(),
-                  util.get_timestamp(),
+        values = [util.get_timestamp(),
                   '0',
                   '0',
                   request.form['title'],
@@ -142,9 +135,9 @@ def route_remove_question(question_id):
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def route_add_answer(question_id):
     if request.method == 'GET':
-        questions = data_manager.get_questions()
+        question = data_manager.get_question_by_id(question_id)
         answers = data_manager.get_answers_by_question_id(question_id)
-        return render_template('answer.html', question=questions[question_id], answers=answers, question_id=question_id)
+        return render_template('answer.html', question=question, answers=answers)
 
     elif request.method == 'POST':
 
@@ -161,8 +154,7 @@ def route_add_answer(question_id):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        values = [data_manager.get_new_answer_id(),
-                  util.get_timestamp(),
+        values = [util.get_timestamp(),
                   '0',
                   question_id,
                   request.form['message'],
