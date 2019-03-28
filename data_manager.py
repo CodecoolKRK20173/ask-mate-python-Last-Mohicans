@@ -9,7 +9,7 @@ def get_questions():
 
 # returns comments (list of dictionaries)
 def get_comments():
-    return get_records_from_table('comment')
+    return get_records_from_table('comment', 'submission_time')
 
 
 # returns records from table
@@ -36,6 +36,11 @@ def get_question_by_id(question_id):
 # returns answer of given id (dictionary)
 def get_answer_by_id(answer_id):
     return get_record('answer', answer_id)
+
+
+# returns comment of given id (dictionary)
+def get_comment_by_id(comment_id):
+    return get_record('comment', comment_id)
 
 
 # returns record of given id from table (dictionary)
@@ -95,6 +100,11 @@ def update_question(values):
 def update_answer(values):
     columns = ['message', 'image']
     update_table('answer', columns, values)
+
+
+def update_comment(values):
+    columns = ['message', 'edited_count']
+    update_table('comment', columns, values)
 
 
 # updates information in columns of table by values

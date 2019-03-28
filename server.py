@@ -242,8 +242,39 @@ def route_add_comment(what, id_):
         return redirect(f'/question/{question_id}')
 
 
-@app.route('/comment/<question_id>/<comment_id>/delete', methods=['POST'])
-def route_remove_comment(question_id, comment_id):
+@app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
+def route_edit_comment(comment_id):
+    comment = data_manager.get_comment_by_id(comment_id)
+    if request.method == 'GET':
+        question=None
+        answer=None
+        if comment['question_id']:
+            question = data_manager.get_question_by_id(comment['question_id'])
+        else:
+            answer = data_manager.get_answer_by_id(comment['answer_id'])
+        return render_template('comment.html', question=question, answer=answer, comment=comment)
+    elif request.method == 'POST':
+
+        values = [comment_id, request.form['message'], comment['edited_count']+1]
+        data_manager.update_comment(values)
+
+        if comment['question_id']:
+            question_id = comment['question_id']
+        else:
+            answer = data_manager.get_answer_by_id(comment['answer_id'])
+            question_id = answer['question_id']
+
+        return redirect(f'/question/{question_id}')
+
+
+@app.route('/comment/<comment_id>/delete', methods=['POST'])
+def route_remove_comment(comment_id):
+    comment = data_manager.get_comment_by_id(comment_id)
+    if comment['question_id']:
+        question_id = comment['question_id']
+    else:
+        answer = data_manager.get_answer_by_id(comment['answer_id'])
+        question_id = answer['question_id']
     data_manager.remove_record('comment', comment_id)
     return redirect(f'/question/{question_id}')
 
