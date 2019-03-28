@@ -177,6 +177,39 @@ def route_add_answer(question_id):
         return redirect(f'/question/{question_id}')
 
 
+@app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])
+def route_edit_answer(answer_id):
+    question_id = data_manager.get_question_id_by_answer_id(answer_id)
+    answer = data_manager.get_answer_by_id(answer_id)
+    if request.method == 'POST':
+        image = ''
+
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+            image = filename
+
+        values = [answer_id,
+                  request.form['message'],
+                  image]
+
+        data_manager.update_answer(values)
+        return redirect(f'/question/{question_id}')
+    else:
+        question = data_manager.get_question_by_id(question_id)
+        return render_template('answer.html', id=answer_id, question=question, answer=answer)
+
+
 @app.route('/answer/<answer_id>/delete', methods=['POST'])
 def route_remove_answer(answer_id):
     question_id = data_manager.get_question_id_by_answer_id(answer_id)

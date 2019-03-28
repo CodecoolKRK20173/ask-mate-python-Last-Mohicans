@@ -16,14 +16,24 @@ def get_questions(cursor):
 
 
 # returns question of given id (dictionary)
+def get_question_by_id(question_id):
+    return get_record('question', question_id)
+
+
+# returns answer of given id (dictionary)
+def get_answer_by_id(answer_id):
+    return get_record('answer', answer_id)
+
+
+# returns record of given id from table (dictionary)
 @connection.connection_handler
-def get_question_by_id(cursor, question_id):
+def get_record(cursor, table, id_):
     cursor.execute(
         sql.SQL("select * from {table} where {column} = {q_id}").format(
-            table=sql.Identifier('question'), column=sql.Identifier('id'), q_id=sql.Literal(question_id))
+            table=sql.Identifier(table), column=sql.Identifier('id'), q_id=sql.Literal(id_))
     )
-    questions = cursor.fetchall()
-    return questions[0]
+    records = cursor.fetchall()
+    return records[0]
 
 
 # returns question_id from answer with given id
@@ -50,13 +60,22 @@ def get_answers_by_question_id(cursor, question_id):
     return answers
 
 
-# updates information of question
-@connection.connection_handler
-def update_question(cursor, values):
-
+def update_question(values):
     columns = ['title', 'message', 'image']
+    update_table('question', columns, values)
+
+
+def update_answer(values):
+    columns = ['message', 'image']
+    update_table('answer', columns, values)
+
+
+# updates information in columns of table by values
+@connection.connection_handler
+def update_table(cursor, table, columns, values):
+
     query = sql.SQL("update {table} set ({column}) = ({value}) where id = {q_id}").format(
-            table=sql.Identifier('question'),
+            table=sql.Identifier(table),
             column=sql.SQL(', ').join(map(sql.Identifier, columns)),
             value=sql.SQL(', ').join(map(sql.Literal, values[1:])),
             q_id=sql.Literal(values[0]))
@@ -88,29 +107,24 @@ def update_vote_number(cursor, table, question_id, value):
 
 
 # adds new question consisting of given values (list) to data storage file
-@connection.connection_handler
-def add_question(cursor, values):
+def add_question(values):
     columns = ['submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
-
-    query = sql.SQL("insert into {table} ({}) values ({})").format(
-        sql.SQL(', ').join(map(sql.Identifier, columns)),
-        sql.SQL(', ').join(map(sql.Literal, values)),
-        table=sql.Identifier('question')
-    )
-    cursor.execute(
-        sql.SQL(query.as_string(cursor))
-    )
+    insert_record('question', columns, values)
 
 
 # adds new answer consisting of given values (list) to data storage file
-@connection.connection_handler
-def add_answer(cursor, values):
+def add_answer(values):
     columns = ['submission_time', 'vote_number', 'question_id', 'message', 'image']
+    insert_record('answer', columns, values)
 
+
+# insert new record into table with values of columns
+@connection.connection_handler
+def insert_record(cursor, table, columns, values):
     query = sql.SQL("insert into {table} ({}) values ({})").format(
         sql.SQL(', ').join(map(sql.Identifier, columns)),
         sql.SQL(', ').join(map(sql.Literal, values)),
-        table=sql.Identifier('answer')
+        table=sql.Identifier(table)
     )
     cursor.execute(
         sql.SQL(query.as_string(cursor))
@@ -127,23 +141,3 @@ def remove_record(cursor, table, id_):
             question_id=sql.Literal(id_))
 
     )
-
-
-@connection.connection_handler
-def get_mentor_names_by_first_name(cursor, first_name):
-    # cursor.execute("""
-    #                 SELECT first_name, last_name FROM mentors
-    #                 WHERE first_name = %(f_n)s ORDER BY first_name;
-    #                """,
-    #                {'f_n': first_name})
-    # names = cursor.fetchall()
-    # return names
-
-    cursor.execute(
-        sql.SQL("select {col1}, {col2} from {table} ").
-            format(col1=sql.Identifier('first_name'),
-                   col2=sql.Identifier('last_name'),
-                   table=sql.Identifier('mentors'))
-    )
-    names = cursor.fetchall()
-    return names
