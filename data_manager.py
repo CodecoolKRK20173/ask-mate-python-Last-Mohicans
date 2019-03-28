@@ -15,6 +15,31 @@ def get_questions(cursor):
     return questions
 
 
+@connection.connection_handler
+def get_questions_by_phrase(cursor, search_phrase):
+    cursor.execute(
+
+        sql.SQL("select {table_q}.* from {table_q} "
+                "LEFT JOIN {table_a} on {table_a}.{question_id_fk}={table_q}.{question_id_pk} "
+                "where {table_q}.{search_title} like {phrase} "
+                "or {table_q}.{search_message} like {phrase} "
+                "or {table_a}.{search_message} like {phrase}"
+                "ORDER BY {table_q}.{column} DESC").format(
+            table_q=sql.Identifier('question'),
+            table_a=sql.Identifier('answer'),
+            search_title=sql.Identifier('title'),
+            search_message=sql.Identifier('message'),
+            # search_message_a=sql.Identifier('message'),
+            question_id_pk=sql.Identifier('id'),
+            question_id_fk=sql.Identifier('question_id'),
+            phrase=sql.Literal(search_phrase),
+            column=sql.Identifier('submission_time'))
+
+    )
+    questions = cursor.fetchall()
+    return questions
+
+
 # returns question of given id (dictionary)
 def get_question_by_id(question_id):
     return get_record('question', question_id)
