@@ -3,16 +3,29 @@ from psycopg2 import sql
 
 
 # returns questions (list of dictionaries)
+def get_questions():
+    return get_records_from_table('question', 'submission_time')
+
+
+# returns comments (list of dictionaries)
+def get_comments():
+    return get_records_from_table('comment', 'submission_time')
+
+
+# returns records from table
 @connection.connection_handler
-def get_questions(cursor):
+def get_records_from_table(cursor, table, order=''):
+    ordered = ''
+    if order:
+        ordered = 'ORDER BY {column} DESC'
     cursor.execute(
 
-        sql.SQL("select * from {table} ORDER BY {column} DESC").format(
-            table=sql.Identifier('question'), column=sql.Identifier('submission_time'))
+        sql.SQL("select * from {table}"+ordered).format(
+            table=sql.Identifier(table), column=sql.Identifier(order))
 
     )
-    questions = cursor.fetchall()
-    return questions
+    records = cursor.fetchall()
+    return records
 
 
 @connection.connection_handler
@@ -50,6 +63,11 @@ def get_answer_by_id(answer_id):
     return get_record('answer', answer_id)
 
 
+# returns comment of given id (dictionary)
+def get_comment_by_id(comment_id):
+    return get_record('comment', comment_id)
+
+
 # returns record of given id from table (dictionary)
 @connection.connection_handler
 def get_record(cursor, table, id_):
@@ -62,27 +80,41 @@ def get_record(cursor, table, id_):
 
 
 # returns question_id from answer with given id
+def get_question_id_by_answer_id(answer_id):
+    return get_question_id_by_record_id_from_table('answer', answer_id)
+
+
+# returns question_id from comment with given id
+def get_question_id_by_comment_id(comment_id):
+    return get_question_id_by_record_id_from_table('comment', comment_id)
+
+
 @connection.connection_handler
-def get_question_id_by_answer_id(cursor, answer_id):
+def get_question_id_by_record_id_from_table(cursor, table, id_):
     cursor.execute(
-        sql.SQL("select {question_id} from {table} where {id} = {a_id}").format(
-            table=sql.Identifier('answer'), id=sql.Identifier('id'),
-            question_id=sql.Identifier('question_id'), a_id=sql.Literal(answer_id))
+        sql.SQL("select {question_id} from {table} where {id} = {given_id}").format(
+            table=sql.Identifier(table), id=sql.Identifier('id'),
+            question_id=sql.Identifier('question_id'), given_id=sql.Literal(id_))
     )
-    questions = cursor.fetchall()
-    return questions[0]['question_id']
+    records = cursor.fetchall()
+    return records[0]['question_id']
 
 
 # returns answers associated with question of given id (list of dictionaries)
+def get_answers_by_question_id(question_id):
+    return get_records_by_foreign_id('answer', 'question_id', question_id)
+
+
+# returns records from table with id_type equal to id_ (list of dictionaries)
 @connection.connection_handler
-def get_answers_by_question_id(cursor, question_id):
+def get_records_by_foreign_id(cursor, table, id_type, id_):
     cursor.execute(
-        sql.SQL("select * from {table} where {question_id} = {given_id} ORDER BY {time} DESC").format(
-            table=sql.Identifier('answer'), question_id=sql.Identifier('question_id'),
-            time=sql.Identifier('submission_time'), given_id=sql.Literal(question_id))
+        sql.SQL("select * from {table} where {foreign_id} = {given_id} ORDER BY {time} DESC").format(
+            table=sql.Identifier(table), foreign_id=sql.Identifier(id_type),
+            time=sql.Identifier('submission_time'), given_id=sql.Literal(id_))
     )
-    answers = cursor.fetchall()
-    return answers
+    records = cursor.fetchall()
+    return records
 
 
 def update_question(values):
@@ -93,6 +125,11 @@ def update_question(values):
 def update_answer(values):
     columns = ['message', 'image']
     update_table('answer', columns, values)
+
+
+def update_comment(values):
+    columns = ['message', 'edited_count']
+    update_table('comment', columns, values)
 
 
 # updates information in columns of table by values
@@ -143,6 +180,12 @@ def add_answer(values):
     insert_record('answer', columns, values)
 
 
+# adds new comment consisting of given values (list) to data storage file
+def add_comment(values):
+    columns = ['question_id', 'answer_id', 'message', 'submission_time', 'edited_count']
+    insert_record('comment', columns, values)
+
+
 # insert new record into table with values of columns
 @connection.connection_handler
 def insert_record(cursor, table, columns, values):
@@ -161,8 +204,8 @@ def insert_record(cursor, table, columns, values):
 def remove_record(cursor, table, id_):
     cursor.execute(
 
-        sql.SQL("delete from {table} where {id} = {question_id}").format(
+        sql.SQL("delete from {table} where {id} = {given_id}").format(
             table=sql.Identifier(table), id=sql.Identifier('id'),
-            question_id=sql.Literal(id_))
+            given_id=sql.Literal(id_))
 
     )
