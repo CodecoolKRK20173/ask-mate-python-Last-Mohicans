@@ -17,13 +17,14 @@ def allowed_file(filename):
 
 @app.route('/')
 def index():
-    return redirect('/list')
+    questions = data_manager.get_latest_questions()
+    return render_template('list.html', questions=questions, latest=True)
 
 
 @app.route('/list')
 def questions_list():
     questions = data_manager.get_questions()
-    return render_template('list.html', questions=questions)
+    return render_template('list.html', questions=questions, latest=False)
 
 
 @app.route('/question/<question_id>')
@@ -40,8 +41,6 @@ def route_question_search():
     search_phrase = request.args.get('q')
     search_phrase = '%' + search_phrase + '%'
     questions = data_manager.get_questions_by_phrase(search_phrase)
-
-
 
     return render_template('list.html', questions=questions)
     # return render_template('question.html', question=questions)

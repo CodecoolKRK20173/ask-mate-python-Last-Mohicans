@@ -28,6 +28,17 @@ def get_records_from_table(cursor, table, order=''):
     return records
 
 
+# returns 5 latest (by time) questions
+@connection.connection_handler
+def get_latest_questions(cursor):
+    cursor.execute(
+        sql.SQL("select * from {table} order by {column} DESC fetch first 5 rows only").format(
+            table=sql.Identifier('question'), column=sql.Identifier('submission_time'))
+    )
+    records = cursor.fetchall()
+    return records
+
+
 @connection.connection_handler
 def get_questions_by_phrase(cursor, search_phrase):
     cursor.execute(

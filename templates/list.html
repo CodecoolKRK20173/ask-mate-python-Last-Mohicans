@@ -79,5 +79,10 @@
         {% endif %}
     </table>
     <h1><a href="/add-question">Add new user question<br></a></h1>
+    {% if latest %}
+    <h1><a href="/list">View all questions<br></a></h1>
+    {% else %}
+    <h1><a href="/">Homepage<br></a></h1>
+    {% endif %}
 </body>
 </html>
