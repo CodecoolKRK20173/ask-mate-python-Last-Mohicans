@@ -34,28 +34,55 @@
             {% endfor %}
         </tr>
     </table>
-    <br>
-        <tr><a href="/list">Back to list </a></tr>
-    <br>
-    <h2>Answers:</h2>
-    <br>
-
+    <tr><a href="/list">Back to list </a></tr>
+    <h2>Comments:</h2>
     <table border="2">
         <tr>
             <th>id</th>
-            <th>submission_time</th>
-            <th>vote_number</th>
             <th>question_id</th>
+            <th>answer_id</th>
             <th>message</th>
-            <th>image</th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th>submission_time</th>
+            <th>edited_count</th>
+            <th colspan="2"></th>
         </tr>
+        {% if comments %}
+        {% for comment in comments %}
+            {% if comment['question_id'] == question['id'] %}
+            <tr>
+                {% for key, value in comment.items() %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+                <td>
+                    <form action="/comment/{{ comment['id'] }}/edit" method="get">
+                        <button type="submit">Edit</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="/comment/{{ comment['id'] }}/delete" method="get">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        {% endif %}
+    </table>
+    <h1><a href="/comment/question/{{question['id']}}/new-comment">Add a comment </a></h1>
+    <h2>Answers:</h2>
+    <table border="2">
         {% if answers %}
         {% for answer in answers %}
-        <tr>
+            <tr>
+                <th>id</th>
+                <th>submission_time</th>
+                <th>vote_number</th>
+                <th>question_id</th>
+                <th>message</th>
+                <th>image</th>
+                <th colspan="5"></th>
+            </tr>
+            <tr>
             {% for key, value in answer.items() %}
                 {% if key == 'image' %}
                         {% if value %}
@@ -67,7 +94,7 @@
                         {% endif %}
                 {% else %}
                     <td>{{ value }}</td>
-            {% endif %}
+                {% endif %}
             {% endfor %}
             <td>
                 <form action="/answer/{{ answer['id'] }}/vote-up" method="post">
@@ -80,7 +107,7 @@
                 </form>
             </td>
             <td>
-                <form action="/answer/{{ answer['id'] }}/edit" method="post">
+                <form action="/answer/{{ answer['id'] }}/edit" method="get">
                     <button type="submit">Edit</button>
                 </form>
             </td>
@@ -89,14 +116,45 @@
                     <button type="submit">Delete</button>
                 </form>
             </td>
-        </tr>
+            <td>
+                <form action="/comment/answer/{{ answer['id'] }}/new-comment" method="get">
+                    <button type="submit">Comment</button>
+                </form>
+            </td>
+            </tr>
+            {% for comment in comments %}
+            {% if comment['answer_id'] == answer['id'] %}
+                <tr>
+                    <th colspan="3" rowspan="2"></th>
+                    <th>id</th>
+                    <th>question_id</th>
+                    <th>answer_id</th>
+                    <th>message</th>
+                    <th>submission_time</th>
+                    <th>edited_count</th>
+                    <th colspan="2"></th>
+                </tr>
+                <tr>
+                        {% for key, value in comment.items() %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                        <td>
+                            <form action="/comment/{{ comment['id'] }}/edit" method="get">
+                                <button type="submit">Edit</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/comment/{{ comment['id'] }}/delete" method="get">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+
+                </tr>
+            {% endif %}
+            {% endfor %}
         {% endfor %}
         {% endif %}
-        <br>
     </table>
-
-        <h1><tr><a href="/question/{{question['id']}}/new-answer">Add an answer </a></tr></h1>
-            <!--<button type="button" form="my_form">ok</button>-->
-
+        <h1><a href="/question/{{question['id']}}/new-answer">Add an answer </a></h1>
 </body>
 </html>

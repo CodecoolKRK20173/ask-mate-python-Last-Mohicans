@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% if comment %}
+        <title>Edit comment</title>
+    {% else %}
+        <title>Add comment</title>
+    {% endif %}
+</head>
+<body>
+    {% if question %}
+        <title>Your comment to the question</title>
+    {% else %}
+        <title>Your comment to the answer</title>
+    {% endif %}
+    <table border="2">
+        <tr>
+            {% if question %}
+                <th>title</th>
+            {% endif %}
+            <th>message</th>
+        </tr>
+        <tr>
+            {% if question %}
+                <td>{{ question["title"]}}</td>
+                <td>{{ question["message"]}}</td>
+            {% else %}
+                <td>{{ answer["message"]}}</td>
+            {% endif %}
+        </tr>
+    </table>
+    <br>
+        {% if question %}
+            <tr><a href="/question/{{question['id']}}">Back</a></tr>
+        {% else %}
+            <tr><a href="/question/{{answer['question_id']}}">Back</a></tr>
+        {% endif %}
+    <br>
+
+    <form {% if comment %}
+            action="/comment/{{ comment['id'] }}/edit"
+          {% else %}
+            {% if question %}
+                action="/comment/question/{{question['id']}}/new-comment"
+            {% else %}
+                action="/comment/answer/{{answer['id']}}/new-comment"
+            {% endif %}
+          {% endif %}
+          method="post">
+        <label for="message"><br>comment:<br></label>
+        <textarea id="message" name="message" rows="8" cols="80" required>{{ comment["message"] if comment }}</textarea>
+        <br>
+        <tr>
+          <button type="submit" value=Upload>Submit</button>
+        </tr>
+
+    </form>
+</body>
+</html>

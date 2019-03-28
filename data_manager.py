@@ -3,16 +3,29 @@ from psycopg2 import sql
 
 
 # returns questions (list of dictionaries)
+def get_questions():
+    return get_records_from_table('question', 'submission_time')
+
+
+# returns comments (list of dictionaries)
+def get_comments():
+    return get_records_from_table('comment')
+
+
+# returns records from table
 @connection.connection_handler
-def get_questions(cursor):
+def get_records_from_table(cursor, table, order=''):
+    ordered = ''
+    if order:
+        ordered = 'ORDER BY {column} DESC'
     cursor.execute(
 
-        sql.SQL("select * from {table} ORDER BY {column} DESC").format(
-            table=sql.Identifier('question'), column=sql.Identifier('submission_time'))
+        sql.SQL("select * from {table}"+ordered).format(
+            table=sql.Identifier(table), column=sql.Identifier(order))
 
     )
-    questions = cursor.fetchall()
-    return questions
+    records = cursor.fetchall()
+    return records
 
 
 # returns question of given id (dictionary)
@@ -49,15 +62,20 @@ def get_question_id_by_answer_id(cursor, answer_id):
 
 
 # returns answers associated with question of given id (list of dictionaries)
+def get_answers_by_question_id(question_id):
+    return get_records_by_foreign_id('answer', 'question_id', question_id)
+
+
+# returns records from table with id_type equal to id_ (list of dictionaries)
 @connection.connection_handler
-def get_answers_by_question_id(cursor, question_id):
+def get_records_by_foreign_id(cursor, table, id_type, id_):
     cursor.execute(
-        sql.SQL("select * from {table} where {question_id} = {given_id} ORDER BY {time} DESC").format(
-            table=sql.Identifier('answer'), question_id=sql.Identifier('question_id'),
-            time=sql.Identifier('submission_time'), given_id=sql.Literal(question_id))
+        sql.SQL("select * from {table} where {foreign_id} = {given_id} ORDER BY {time} DESC").format(
+            table=sql.Identifier(table), foreign_id=sql.Identifier(id_type),
+            time=sql.Identifier('submission_time'), given_id=sql.Literal(id_))
     )
-    answers = cursor.fetchall()
-    return answers
+    records = cursor.fetchall()
+    return records
 
 
 def update_question(values):
@@ -116,6 +134,12 @@ def add_question(values):
 def add_answer(values):
     columns = ['submission_time', 'vote_number', 'question_id', 'message', 'image']
     insert_record('answer', columns, values)
+
+
+# adds new comment consisting of given values (list) to data storage file
+def add_comment(values):
+    columns = ['question_id', 'answer_id', 'message', 'submission_time', 'edited_count']
+    insert_record('comment', columns, values)
 
 
 # insert new record into table with values of columns
