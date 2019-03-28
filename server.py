@@ -34,6 +34,14 @@ def route_question(question_id):
     return render_template('question.html', question=question, answers=answers)
 
 
+@app.route('/search?q=<search_phrase>')
+def route_question_search(search_phrase):
+    data_manager.update_question_view_number(question_id)
+    question = data_manager.get_question_by_id(question_id)
+    answers = data_manager.get_answers_by_question_id(question_id)
+    return render_template('question.html', question=question, answers=answers)
+
+
 @app.route('/question/<question_id>/<vote>', methods=['POST'])
 def question_vote(question_id, vote):
     value = 0
