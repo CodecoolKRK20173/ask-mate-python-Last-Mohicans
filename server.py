@@ -242,6 +242,11 @@ def route_add_comment(what, id_):
         return redirect(f'/question/{question_id}')
 
 
+@app.route('/comment/<question_id>/<comment_id>/delete', methods=['POST'])
+def route_remove_comment(question_id, comment_id):
+    data_manager.remove_record('comment', comment_id)
+    return redirect(f'/question/{question_id}')
+
 # @app.route('/question/<question_id>/add-image', methods=['POST'])
 # def question_add_image(question_id):
 #     data_manager.update_question_vote_number(question_id, -1)

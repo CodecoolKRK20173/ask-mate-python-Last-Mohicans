@@ -50,15 +50,24 @@ def get_record(cursor, table, id_):
 
 
 # returns question_id from answer with given id
+def get_question_id_by_answer_id(answer_id):
+    return get_question_id_by_record_id_from_table('answer', answer_id)
+
+
+# returns question_id from comment with given id
+def get_question_id_by_comment_id(comment_id):
+    return get_question_id_by_record_id_from_table('comment', comment_id)
+
+
 @connection.connection_handler
-def get_question_id_by_answer_id(cursor, answer_id):
+def get_question_id_by_record_id_from_table(cursor, table, id_):
     cursor.execute(
-        sql.SQL("select {question_id} from {table} where {id} = {a_id}").format(
-            table=sql.Identifier('answer'), id=sql.Identifier('id'),
-            question_id=sql.Identifier('question_id'), a_id=sql.Literal(answer_id))
+        sql.SQL("select {question_id} from {table} where {id} = {given_id}").format(
+            table=sql.Identifier(table), id=sql.Identifier('id'),
+            question_id=sql.Identifier('question_id'), given_id=sql.Literal(id_))
     )
-    questions = cursor.fetchall()
-    return questions[0]['question_id']
+    records = cursor.fetchall()
+    return records[0]['question_id']
 
 
 # returns answers associated with question of given id (list of dictionaries)
@@ -160,8 +169,8 @@ def insert_record(cursor, table, columns, values):
 def remove_record(cursor, table, id_):
     cursor.execute(
 
-        sql.SQL("delete from {table} where {id} = {question_id}").format(
+        sql.SQL("delete from {table} where {id} = {given_id}").format(
             table=sql.Identifier(table), id=sql.Identifier('id'),
-            question_id=sql.Literal(id_))
+            given_id=sql.Literal(id_))
 
     )

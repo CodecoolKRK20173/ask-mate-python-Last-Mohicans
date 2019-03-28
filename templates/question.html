@@ -59,7 +59,7 @@
                     </form>
                 </td>
                 <td>
-                    <form action="/comment/{{ comment['id'] }}/delete" method="get">
+                    <form action="/comment/{{ question['id'] }}/{{ comment['id'] }}/delete" method="post">
                         <button type="submit">Delete</button>
                     </form>
                 </td>
@@ -144,7 +144,7 @@
                             </form>
                         </td>
                         <td>
-                            <form action="/comment/{{ comment['id'] }}/delete" method="get">
+                            <form action="/comment/{{ question['id'] }}/{{ comment['id'] }}/delete" method="post">
                                 <button type="submit">Delete</button>
                             </form>
                         </td>
