@@ -2,16 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add an answer</title>
+    {% if answer %}
+        <title>Edit an answer</title>
+    {% else %}
+        <title>Add an answer</title>
+    {% endif %}
 </head>
 <body>
     <h2>Your answer to the question</h2>
     <table border="2">
         <tr>
-
             <th>title</th>
             <th>message</th>
-
         </tr>
         <tr>
             <td>{{ question["title"]}}</td>
@@ -25,15 +27,19 @@
     <br>
 
 
-    <form action="/question/{{question['id']}}/new-answer"
+    <form {% if answer %}
+          action="/answer/{{ id }}/edit"
+          {% else %}
+          action="/question/{{question['id']}}/new-answer"
+          {% endif %}
           method="post"
           enctype=multipart/form-data>
         <input type=file name=file>
         <label for="message"><br>Answer:<br></label>
-        <textarea id="message" name="message" rows="8" cols="80" required></textarea>
+        <textarea id="message" name="message" rows="8" cols="80" required>{{ answer["message"] if answer }}</textarea>
         <br>
         <tr>
-          <button type="submit" value=Upload>Add answer</button>
+          <button type="submit" value=Upload>Submit</button>
         </tr>
 
     </form>
