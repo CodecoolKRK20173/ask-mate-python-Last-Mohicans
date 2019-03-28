@@ -8,7 +8,7 @@
 
     <form action="/search" method="get">
       <div>
-        <label for="site-search">Search Ask_Mohican:</label>
+        <label for="mySearch">Search Ask_Mohican:</label>
         <input type="search" id="mySearch" name="q"
         placeholder="Search the site..." required>
         <button type="submit">Search</button>
@@ -38,7 +38,7 @@
         <tr>
             {% for key, value in question.items() %}
                 {% if key == 'title' %}
-                    <td><a href="/question/{{ question['id'] }}">{{ value }}</td>
+                <td><a href="/question/{{ question['id'] }}">{{ value }}</a></td>
                 {% else %}
                     {% if key == 'image' %}
                         {% if value %}
