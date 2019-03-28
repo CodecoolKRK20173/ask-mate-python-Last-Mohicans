@@ -3,8 +3,8 @@ from psycopg2 import sql
 
 
 # returns questions (list of dictionaries)
-def get_questions():
-    return get_records_from_table('question', 'submission_time')
+def get_questions(column='submission_time'):
+    return get_records_from_table('question', column)
 
 
 # returns comments (list of dictionaries)

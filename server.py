@@ -27,6 +27,12 @@ def questions_list():
     return render_template('list.html', questions=questions, latest=False)
 
 
+@app.route('/list/<option>')
+def questions_list_sorted(option):
+    questions = data_manager.get_questions(option)
+    return render_template('list.html', questions=questions, latest=False)
+
+
 @app.route('/question/<question_id>')
 def route_question(question_id):
     data_manager.update_question_view_number(question_id)
