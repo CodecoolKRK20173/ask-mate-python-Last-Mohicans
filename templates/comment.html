@@ -1,18 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% if comment %}
-        <title>Edit comment</title>
-    {% else %}
-        <title>Add comment</title>
-    {% endif %}
-</head>
+{% extends "layout.html" %}
+{% block content %}
 <body>
     {% if question %}
-        <title>Your comment to the question</title>
+        <h1>Your comment to the question</h1>
     {% else %}
-        <title>Your comment to the answer</title>
+        <h1>Your comment to the answer</h1>
     {% endif %}
     <table border="2">
         <tr>
@@ -56,5 +48,4 @@
         </tr>
 
     </form>
-</body>
-</html>
+{% endblock %}

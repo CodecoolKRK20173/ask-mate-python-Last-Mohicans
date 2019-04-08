@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+{% extends "layout.html" %}
+{% block content %}
     {% if answer %}
-        <title>Edit an answer</title>
+        <h1>Edit an answer to the question</h1>
     {% else %}
-        <title>Add an answer</title>
+        <h2>Add an answer to the question</h2>
     {% endif %}
-</head>
-<body>
-    <h2>Your answer to the question</h2>
     <table border="2">
         <tr>
             <th>title</th>
@@ -43,8 +38,4 @@
         </tr>
 
     </form>
-
-    <!--</table>-->
-
-</body>
-</html>
+{% endblock %}

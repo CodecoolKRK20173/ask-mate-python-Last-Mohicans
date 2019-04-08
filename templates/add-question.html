@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+{% extends "layout.html" %}
+{% block content %}
     {% if question %}
-        <title>Edit question</title>
+        <h1>Edit question</h1>
     {% else %}
-        <title>Add question</title>
+        <h1>Add question</h1>
     {% endif %}
-</head>
-<body>
-
     <form {% if question %}
           action="/question/{{ id }}/edit"
           {% else %}
@@ -27,5 +22,4 @@
     </form>
     <br>
     <tr><a href="/list">Back to list </a></tr>
-</body>
-</html>
+{% endblock %}
