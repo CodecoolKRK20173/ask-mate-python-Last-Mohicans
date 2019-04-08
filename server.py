@@ -88,17 +88,9 @@ def answer_vote(answer_id, vote):
 def route_add_question():
 
     if request.method == 'POST':
-
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
+        filename = ''
         file = request.files['file']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
+        if file.filename != '' and file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
@@ -119,24 +111,12 @@ def route_add_question():
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def route_edit_question(question_id):
     if request.method == 'POST':
-        question = data_manager.get_question_by_id(question_id)
-        # question['title'] = request.form['title']
-        # question['message'] = request.form['message']
         image = ''
 
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
         file = request.files['file']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
+        if file.filename != '' and file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
             image = filename
 
         values = [question_id,
@@ -144,15 +124,9 @@ def route_edit_question(question_id):
                   request.form['message'],
                   image]
 
-        # data_manager.add_question(values)
-
-        data_manager.update_question(values)  #question_id, question,
+        data_manager.update_question(values)
         return redirect('/')
     else:
-
-        # question_headers = data_manager.get_question_fields()[4:7]
-        # return render_template('add-question.html', question_headers=question_headers)
-
         question = data_manager.get_question_by_id(question_id)
         return render_template('add-question.html', id=question_id, question=question)
 
@@ -171,17 +145,10 @@ def route_add_answer(question_id):
         return render_template('answer.html', question=question, answers=answers)
 
     elif request.method == 'POST':
+        filename = ''
 
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
         file = request.files['file']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
+        if file.filename != '' and file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
@@ -203,19 +170,10 @@ def route_edit_answer(answer_id):
     if request.method == 'POST':
         image = ''
 
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
         file = request.files['file']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
+        if file.filename != '' and file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
             image = filename
 
         values = [answer_id,
@@ -303,37 +261,6 @@ def route_remove_comment(comment_id):
         question_id = answer['question_id']
     data_manager.remove_record('comment', comment_id)
     return redirect(f'/question/{question_id}')
-
-# @app.route('/question/<question_id>/add-image', methods=['POST'])
-# def question_add_image(question_id):
-#     data_manager.update_question_vote_number(question_id, -1)
-#
-#     return redirect('/list')
-
-
-# @app.route('/list', methods=['GET', 'POST'])
-# def upload_file():
-#     regular_questions = data_manager.get_questions()
-#     regular_questions = {int(key): value for key, value in regular_questions.items()}
-#     ordered_questions = util.reversed_order_dict(regular_questions)
-#     if request.method == 'POST':
-#         # check if the post request has the file part
-#         if 'file' not in request.files:
-#             flash('No file part')
-#             return redirect(request.url)
-#         file = request.files['file']
-#         # if user does not select file, browser also
-#         # submit a empty part without filename
-#         if file.filename == '':
-#             # flash('No selected file')
-#             return redirect(request.url)
-#         if file and allowed_file(file.filename):
-#             filename = secure_filename(file.filename)
-#             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-#             url = url_for('static', filename=filename)
-#
-#             return render_template('list.html', questions=ordered_questions, filename=filename)
-#     return render_template('list.html', questions=ordered_questions) #, filename=filename)
 
 
 if __name__ == "__main__":
