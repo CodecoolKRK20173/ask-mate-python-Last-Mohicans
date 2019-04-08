@@ -39,7 +39,10 @@ def route_question(question_id):
     question = data_manager.get_question_by_id(question_id)
     answers = data_manager.get_answers_by_question_id(question_id)
     comments = data_manager.get_comments()
-    return render_template('question.html', question=question, answers=answers, comments=comments)
+    questions_comments_ids = [comment['question_id'] for comment in comments if comment['question_id']]
+    answer_comments_ids = [comment['answer_id'] for comment in comments if comment['answer_id']]
+    return render_template('question.html', question=question, answers=answers, comments=comments,
+                           qc_ids=questions_comments_ids, qa_ids=answer_comments_ids)
 
 
 @app.route('/search')

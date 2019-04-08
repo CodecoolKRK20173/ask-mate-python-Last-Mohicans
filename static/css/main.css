@@ -8,5 +8,29 @@ body {
 }
 
 table {
-  border: 1px solid black;
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    text-align: center;
+}
+
+th {
+    width: 5%;
+}
+
+th.message {
+    width: 100%;
+}
+
+td.message {
+    text-align: left;
+    border: 1px solid black;
+}
+
+td.inner {
+    text-align: center;
+    border: 1px solid black;
 }
