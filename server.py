@@ -89,10 +89,11 @@ def route_add_question():
 
     if request.method == 'POST':
         filename = ''
-        file = request.files['file']
-        if file.filename != '' and file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename != '' and file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         values = [util.get_timestamp(),
                   '0',
@@ -113,11 +114,12 @@ def route_edit_question(question_id):
     if request.method == 'POST':
         image = ''
 
-        file = request.files['file']
-        if file.filename != '' and file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            image = filename
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename != '' and file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                image = filename
 
         values = [question_id,
                   request.form['title'],
@@ -147,10 +149,11 @@ def route_add_answer(question_id):
     elif request.method == 'POST':
         filename = ''
 
-        file = request.files['file']
-        if file.filename != '' and file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename != '' and file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         values = [util.get_timestamp(),
                   '0',
@@ -170,11 +173,12 @@ def route_edit_answer(answer_id):
     if request.method == 'POST':
         image = ''
 
-        file = request.files['file']
-        if file.filename != '' and file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            image = filename
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename != '' and file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                image = filename
 
         values = [answer_id,
                   request.form['message'],
